@@ -687,3 +687,9 @@ a, button, .btn, .btn-primary, .step-box, .card {
   color: var(--primary);
   box-shadow: 0 5px 15px rgba(214, 104, 156, 0.3);
 }
+
+/* 4. Article & Video Cards (Awareness Page) */
+.article-card:hover, .video-card:hover, .story-card:hover {
+  border: 2px solid var(--primary);
+  box-shadow: 0 12px 25px rgba(214, 104, 156, 0.15);
+}
