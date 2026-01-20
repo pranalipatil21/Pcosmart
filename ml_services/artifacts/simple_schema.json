@@ -1,0 +1,20 @@
+{
+  "features": [
+    "age_yrs",
+    "bmi",
+    "pulse_rate_bpm",
+    "rr_breaths_min",
+    "hb_g_dl",
+    "cycle_r_i",
+    "cycle_length_days",
+    "weight_gain_y_n",
+    "hair_growth_y_n",
+    "skin_darkening_y_n",
+    "hair_loss_y_n",
+    "pimples_y_n",
+    "fast_food_y_n",
+    "reg_exercise_y_n",
+    "bp_systolic_mmhg",
+    "bp_diastolic_mmhg"
+  ]
+}
