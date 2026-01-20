@@ -9,6 +9,7 @@ import Home from './pages/Home';
 import Login from './pages/Login';
 import Register from './pages/Register';
 import AboutPCOS from './pages/AboutPCOS';
+import Awareness from './pages/Awareness';
 
 function App() {
   return (
@@ -22,6 +23,7 @@ function App() {
               <Route path="/about" element={<AboutPCOS />} />
               <Route path="/login" element={<Login />} />
               <Route path="/register" element={<Register />} />
+              <Route path="/awareness" element={<Awareness />} />
             </Routes>
           </main>
           <Footer />
