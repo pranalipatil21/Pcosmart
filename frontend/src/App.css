@@ -699,3 +699,9 @@ a, button, .btn, .btn-primary, .step-box, .card {
   border-color: var(--primary);
   background-color: #FFF5F8;
 }
+
+/* 6. Upload Zone */
+.upload-zone:hover {
+  border-color: var(--primary);
+  background-color: #FFF0F5;
+}
