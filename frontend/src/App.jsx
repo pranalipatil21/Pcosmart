@@ -12,6 +12,7 @@ import AboutPCOS from './pages/AboutPCOS';
 import Awareness from './pages/Awareness';
 import Contact from './pages/Contact';
 import DietExercise from './pages/DietExercise';
+import SymptomTest from './pages/SymptomTest';
 
 function App() {
   return (
@@ -28,6 +29,11 @@ function App() {
               <Route path="/contact" element={<Contact />} />
               <Route path="/awareness" element={<Awareness />} />
               <Route path="/diet" element={<DietExercise />} />
+
+              {/* Test Routes */}
+              {/* <Route path="/check/image" element={<ImageTest />} /> */}
+              <Route path="/check/symptom" element={<SymptomTest />} />
+              {/* <Route path="/check/combined" element={<CombinedTest />} /> */}
             </Routes>
           </main>
           <Footer />
