@@ -17,6 +17,7 @@ import SymptomResult from './pages/SymptomResult';
 import ImageTest from './pages/ImageTest';
 import ImageResult from './pages/ImageResult';
 import CombinedTest from './pages/CombinedTest';
+import CombinedResult from './pages/CombinedResult';
 
 function App() {
   return (
@@ -42,7 +43,7 @@ function App() {
               {/* Result Routes */}
               <Route path="/result/image" element={<ImageResult />} />
               <Route path="/result/symptom" element={<SymptomResult />} />
-              {/* <Route path="/result/combined" element={<CombinedResult />} /> */}
+              <Route path="/result/combined" element={<CombinedResult />} />
             </Routes>
           </main>
           <Footer />
