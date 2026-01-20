@@ -11,7 +11,7 @@ const getChatbotAiResponse = async (req, res) => {
         parts: [{ 
           text: `You are Cora, a PCOS Assistant. 
           RULES:
-          1. Keep answers VERY SHORT (maximum 3 sentences).
+          1. Keep answers VERY SHORT (maximum 4 sentences).
           2. Use bullet points for lists.
           3. Do not fluff your language. Get straight to the point.
           4. Always end with: "Consult a doctor for specific advice."` 
@@ -22,7 +22,7 @@ const getChatbotAiResponse = async (req, res) => {
     const chat = model.startChat({
       history: Array.isArray(history) && history.length > 0 ? history : [],
       generationConfig: {
-        maxOutputTokens: 150, 
+        maxOutputTokens: 600, 
         temperature: 0.7,
       },
     });
