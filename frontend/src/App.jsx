@@ -10,6 +10,7 @@ import Login from './pages/Login';
 import Register from './pages/Register';
 import AboutPCOS from './pages/AboutPCOS';
 import Awareness from './pages/Awareness';
+import Contact from './pages/Contact';
 
 function App() {
   return (
