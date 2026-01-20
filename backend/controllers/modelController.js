@@ -20,48 +20,48 @@ const to01 = (v) => {
   return v ? 1 : 0;
 };
 
+// --- NEW HELPER: Generate Recommendations based on Risk ---
+const getRecommendations = (riskLevel, probability) => {
+  const prob = Number(probability) || 0;
+  const risk = (riskLevel || "").toLowerCase();
+
+  // Logic: High Risk
+  if (risk.includes("high") || prob >= 0.7) {
+    return {
+      diet: "Strict Low-Glycemic Index (GI) diet. Eliminate processed sugars, white bread, and sugary drinks. Focus on anti-inflammatory foods like fatty fish (salmon), turmeric, ginger, and leafy greens. Consider intermittent fasting (14:10 window) after consulting a doctor.",
+      exercise: "Aim for 45+ minutes of daily activity. Prioritize High-Intensity Interval Training (HIIT) to improve insulin sensitivity and Strength Training (3-4 times/week) to build muscle mass and boost metabolism."
+    };
+  }
+  // Logic: Moderate Risk
+  else if (risk.includes("moderate") || (prob >= 0.35 && prob < 0.7)) {
+    return {
+      diet: "Balanced Plate Method: 50% vegetables, 25% lean protein, 25% high-fiber carbs. Limit dairy and gluten if you notice bloating or acne. Stay hydrated (2-3 liters of water daily) and reduce caffeine intake.",
+      exercise: "Daily 30-minute moderate cardio (brisk walking, swimming, or cycling). Incorporate resistance training or yoga 2-3 times a week to manage cortisol (stress) levels."
+    };
+  }
+  // Logic: Low Risk
+  else {
+    return {
+      diet: "Maintain a nutrient-dense whole food diet. Focus on fiber-rich fruits, vegetables, and whole grains. Avoid late-night snacking and excessive processed foods to keep hormones balanced.",
+      exercise: "Maintain an active lifestyle. Aim for 150 minutes of moderate activity per week (e.g., dancing, hiking, yoga). Regular stretching is recommended to maintain flexibility and blood flow."
+    };
+  }
+};
 
 // Takes simple form data from frontend, saves it, sends payload to ML service, returns ML output.
-
 const sendDataToSimpleTextModel = async (req, res) => {
   console.log("req.user =", req.user);
   try {
     const {
-      age,
-      bmi,
-      pulseRate,
-      respiratoryRate,
-      hemoglobin,
-      menstrualCycleType, // 2 or 4
-      averageCycleLength,
-      weightGain,
-      hairGrowth,
-      skinDarkening,
-      hairLoss,
-      pimples,
-      fastFood,
-      regularExercise,
-      bpSystolic,
-      bpDiastolic,
+      age, bmi, pulseRate, respiratoryRate, hemoglobin, menstrualCycleType, 
+      averageCycleLength, weightGain, hairGrowth, skinDarkening, hairLoss, 
+      pimples, fastFood, regularExercise, bpSystolic, bpDiastolic,
     } = req.body;
 
     const required = {
-      age,
-      bmi,
-      pulseRate,
-      respiratoryRate,
-      hemoglobin,
-      menstrualCycleType,
-      averageCycleLength,
-      weightGain,
-      hairGrowth,
-      skinDarkening,
-      hairLoss,
-      pimples,
-      fastFood,
-      regularExercise,
-      bpSystolic,
-      bpDiastolic,
+      age, bmi, pulseRate, respiratoryRate, hemoglobin, menstrualCycleType,
+      averageCycleLength, weightGain, hairGrowth, skinDarkening, hairLoss,
+      pimples, fastFood, regularExercise, bpSystolic, bpDiastolic,
     };
 
     for (const [k, v] of Object.entries(required)) {
@@ -72,9 +72,7 @@ const sendDataToSimpleTextModel = async (req, res) => {
 
     const cycleVal = String(menstrualCycleType);
     if (!["2", "4"].includes(cycleVal)) {
-      return res
-        .status(400)
-        .json({ message: "menstrualCycleType must be 2 (Regular) or 4 (Irregular)" });
+      return res.status(400).json({ message: "menstrualCycleType must be 2 (Regular) or 4 (Irregular)" });
     }
 
     if (!ML_SERVICE_URL) {
@@ -109,7 +107,7 @@ const sendDataToSimpleTextModel = async (req, res) => {
       pulse_rate_bpm: Number(pulseRate),
       rr_breaths_min: Number(respiratoryRate),
       hb_g_dl: Number(hemoglobin),
-      cycle_r_i: cycleVal, // send as string "2"/"4"
+      cycle_r_i: cycleVal, 
       cycle_length_days: Number(averageCycleLength),
       weight_gain_y_n: to01(weightGain),
       hair_growth_y_n: to01(hairGrowth),
@@ -127,6 +125,10 @@ const sendDataToSimpleTextModel = async (req, res) => {
       timeout: 30000,
     });
 
+    // --- ADDED: Generate Recommendations ---
+    const recommendations = getRecommendations(mlResponse.data.risk_level, mlResponse.data.probability);
+    mlResponse.data.recommendations = recommendations; // Attach to ML response object
+
     // Save ML output
     saved.modelOutput = mlResponse.data;
     await saved.save();
@@ -139,23 +141,15 @@ const sendDataToSimpleTextModel = async (req, res) => {
       const pdfBuffer = await generatePredictionPdfBuffer({
         inputMode: "simple",
         submissionId: saved._id.toString(),
-        mlResult: mlResponse.data,
+        mlResult: mlResponse.data, // This now includes .recommendations
         inputSnapshot: {
-          age: saved.age,
-          bmi: saved.bmi,
-          pulseRate: saved.pulseRate,
-          respiratoryRate: saved.respiratoryRate,
-          hemoglobin: saved.hemoglobin,
-          menstrualCycleType: saved.menstrualCycleType,
-          averageCycleLength: saved.averageCycleLength,
-          bpSystolic: saved.bpSystolic,
-          bpDiastolic: saved.bpDiastolic,
-          weightGain: saved.weightGain,
-          hairGrowth: saved.hairGrowth,
-          skinDarkening: saved.skinDarkening,
-          hairLoss: saved.hairLoss,
-          pimples: saved.pimples,
-          fastFood: saved.fastFood,
+          age: saved.age, bmi: saved.bmi, pulseRate: saved.pulseRate,
+          respiratoryRate: saved.respiratoryRate, hemoglobin: saved.hemoglobin,
+          menstrualCycleType: saved.menstrualCycleType, averageCycleLength: saved.averageCycleLength,
+          bpSystolic: saved.bpSystolic, bpDiastolic: saved.bpDiastolic,
+          weightGain: saved.weightGain, hairGrowth: saved.hairGrowth,
+          skinDarkening: saved.skinDarkening, hairLoss: saved.hairLoss,
+          pimples: saved.pimples, fastFood: saved.fastFood,
           regularExercise: saved.regularExercise,
         },
       });
@@ -165,7 +159,6 @@ const sendDataToSimpleTextModel = async (req, res) => {
     } catch (e) {
       console.error("PDF generation failed (simple):", e.message);
     }
-
 
     return res.status(200).json({
       message: "Prediction completed",
@@ -189,54 +182,17 @@ const sendDataToSimpleTextModel = async (req, res) => {
 const sendDataToClinicalTextModel = async (req, res) => {
   try {
     const {
-      age,
-      bmi,
-      pulseRate,
-      respiratoryRate,
-      hemoglobin,
-      menstrualCycleType,
-      averageCycleLength,
-      weightGain,
-      hairGrowth,
-      skinDarkening,
-      hairLoss,
-      pimples,
-      fastFood,
-      regularExercise,
-      bpSystolic,
-      bpDiastolic,
-
-      B_HCG_Test1,
-      B_HCG_Test2,
-      FSH,
-      LH,
-      FSHLH_Ratio,
-      TSH,
-      AMH,
-      prolactin,
-      vitaminD3,
-      progesterone,
-      randomBloodSugar,
+      age, bmi, pulseRate, respiratoryRate, hemoglobin, menstrualCycleType,
+      averageCycleLength, weightGain, hairGrowth, skinDarkening, hairLoss,
+      pimples, fastFood, regularExercise, bpSystolic, bpDiastolic,
+      B_HCG_Test1, B_HCG_Test2, FSH, LH, FSHLH_Ratio, TSH, AMH, prolactin,
+      vitaminD3, progesterone, randomBloodSugar,
     } = req.body;
 
-
     const requiredBasic = {
-      age,
-      bmi,
-      pulseRate,
-      respiratoryRate,
-      hemoglobin,
-      menstrualCycleType,
-      averageCycleLength,
-      weightGain,
-      hairGrowth,
-      skinDarkening,
-      hairLoss,
-      pimples,
-      fastFood,
-      regularExercise,
-      bpSystolic,
-      bpDiastolic,
+      age, bmi, pulseRate, respiratoryRate, hemoglobin, menstrualCycleType,
+      averageCycleLength, weightGain, hairGrowth, skinDarkening, hairLoss,
+      pimples, fastFood, regularExercise, bpSystolic, bpDiastolic,
     };
 
     for (const [k, v] of Object.entries(requiredBasic)) {
@@ -247,9 +203,7 @@ const sendDataToClinicalTextModel = async (req, res) => {
 
     const cycleVal = String(menstrualCycleType);
     if (!["2", "4"].includes(cycleVal)) {
-      return res
-        .status(400)
-        .json({ message: "menstrualCycleType must be 2 (Regular) or 4 (Irregular)" });
+      return res.status(400).json({ message: "menstrualCycleType must be 2 (Regular) or 4 (Irregular)" });
     }
 
     if (!ML_SERVICE_URL) {
@@ -259,25 +213,14 @@ const sendDataToClinicalTextModel = async (req, res) => {
     // Save input in Mongo 
     const saved = await ClinicalDataTest.create({
       userId: req.user?._id,
-      age: Number(age),
-      bmi: Number(bmi),
-      pulseRate: Number(pulseRate),
-      respiratoryRate: Number(respiratoryRate),
-      hemoglobin: Number(hemoglobin),
-      menstrualCycleType: Number(cycleVal),
-      averageCycleLength: Number(averageCycleLength),
-
-      weightGain: Boolean(to01(weightGain)),
-      hairGrowth: Boolean(to01(hairGrowth)),
-      skinDarkening: Boolean(to01(skinDarkening)),
-      hairLoss: Boolean(to01(hairLoss)),
-      pimples: Boolean(to01(pimples)),
-      fastFood: Boolean(to01(fastFood)),
+      age: Number(age), bmi: Number(bmi), pulseRate: Number(pulseRate),
+      respiratoryRate: Number(respiratoryRate), hemoglobin: Number(hemoglobin),
+      menstrualCycleType: Number(cycleVal), averageCycleLength: Number(averageCycleLength),
+      weightGain: Boolean(to01(weightGain)), hairGrowth: Boolean(to01(hairGrowth)),
+      skinDarkening: Boolean(to01(skinDarkening)), hairLoss: Boolean(to01(hairLoss)),
+      pimples: Boolean(to01(pimples)), fastFood: Boolean(to01(fastFood)),
       regularExercise: Boolean(to01(regularExercise)),
-
-      bpSystolic: Number(bpSystolic),
-      bpDiastolic: Number(bpDiastolic),
-
+      bpSystolic: Number(bpSystolic), bpDiastolic: Number(bpDiastolic),
       // labs 
       betaHcg1: B_HCG_Test1 !== undefined && B_HCG_Test1 !== null ? Number(B_HCG_Test1) : null,
       betaHcg2: B_HCG_Test2 !== undefined && B_HCG_Test2 !== null ? Number(B_HCG_Test2) : null,
@@ -294,25 +237,15 @@ const sendDataToClinicalTextModel = async (req, res) => {
 
     // Payload for ML service 
     const mlPayload = {
-      // simple fields
-      age_yrs: Number(age),
-      bmi: Number(bmi),
-      pulse_rate_bpm: Number(pulseRate),
-      rr_breaths_min: Number(respiratoryRate),
-      hb_g_dl: Number(hemoglobin),
-      cycle_r_i: cycleVal,
-      cycle_length_days: Number(averageCycleLength),
-      weight_gain_y_n: to01(weightGain),
-      hair_growth_y_n: to01(hairGrowth),
-      skin_darkening_y_n: to01(skinDarkening),
-      hair_loss_y_n: to01(hairLoss),
-      pimples_y_n: to01(pimples),
-      fast_food_y_n: to01(fastFood),
+      age_yrs: Number(age), bmi: Number(bmi), pulse_rate_bpm: Number(pulseRate),
+      rr_breaths_min: Number(respiratoryRate), hb_g_dl: Number(hemoglobin),
+      cycle_r_i: cycleVal, cycle_length_days: Number(averageCycleLength),
+      weight_gain_y_n: to01(weightGain), hair_growth_y_n: to01(hairGrowth),
+      skin_darkening_y_n: to01(skinDarkening), hair_loss_y_n: to01(hairLoss),
+      pimples_y_n: to01(pimples), fast_food_y_n: to01(fastFood),
       reg_exercise_y_n: to01(regularExercise),
-      bp_systolic_mmhg: Number(bpSystolic),
-      bp_diastolic_mmhg: Number(bpDiastolic),
-
-      // labs (send null if missing; Python pipeline imputers can handle)
+      bp_systolic_mmhg: Number(bpSystolic), bp_diastolic_mmhg: Number(bpDiastolic),
+      // labs
       i_beta_hcg_miu_ml: B_HCG_Test1 !== undefined && B_HCG_Test1 !== null ? Number(B_HCG_Test1) : null,
       ii_beta_hcg_miu_ml: B_HCG_Test2 !== undefined && B_HCG_Test2 !== null ? Number(B_HCG_Test2) : null,
       fsh_miu_ml: FSH !== undefined && FSH !== null ? Number(FSH) : null,
@@ -331,11 +264,13 @@ const sendDataToClinicalTextModel = async (req, res) => {
       timeout: 30000,
     });
 
+    // --- ADDED: Generate Recommendations ---
+    const recommendations = getRecommendations(mlResponse.data.risk_level, mlResponse.data.probability);
+    mlResponse.data.recommendations = recommendations;
+
     // Save ML output
     saved.modelOutput = mlResponse.data;
     await saved.save();
-
-
 
     let reportPdfBase64 = null;
     let reportFilename = null;
@@ -344,38 +279,21 @@ const sendDataToClinicalTextModel = async (req, res) => {
       const pdfBuffer = await generatePredictionPdfBuffer({
         inputMode: "clinical",
         submissionId: saved._id.toString(),
-        mlResult: mlResponse.data,
+        mlResult: mlResponse.data, // now contains recommendations
         inputSnapshot: {
-          age: saved.age,
-          bmi: saved.bmi,
-          pulseRate: saved.pulseRate,
-          respiratoryRate: saved.respiratoryRate,
-          hemoglobin: saved.hemoglobin,
-          menstrualCycleType: saved.menstrualCycleType,
-          averageCycleLength: saved.averageCycleLength,
-          bpSystolic: saved.bpSystolic,
-          bpDiastolic: saved.bpDiastolic,
-
-          weightGain: saved.weightGain,
-          hairGrowth: saved.hairGrowth,
-          skinDarkening: saved.skinDarkening,
-          hairLoss: saved.hairLoss,
-          pimples: saved.pimples,
-          fastFood: saved.fastFood,
+          age: saved.age, bmi: saved.bmi, pulseRate: saved.pulseRate,
+          respiratoryRate: saved.respiratoryRate, hemoglobin: saved.hemoglobin,
+          menstrualCycleType: saved.menstrualCycleType, averageCycleLength: saved.averageCycleLength,
+          bpSystolic: saved.bpSystolic, bpDiastolic: saved.bpDiastolic,
+          weightGain: saved.weightGain, hairGrowth: saved.hairGrowth,
+          skinDarkening: saved.skinDarkening, hairLoss: saved.hairLoss,
+          pimples: saved.pimples, fastFood: saved.fastFood,
           regularExercise: saved.regularExercise,
-
-          // labs (include if you want)
-          betaHcg1: saved.betaHcg1,
-          betaHcg2: saved.betaHcg2,
-          fsh: saved.fsh,
-          lh: saved.lh,
-          fshLhRatio: saved.fshLhRatio,
-          tsh: saved.tsh,
-          amh: saved.amh,
-          prolactin: saved.prolactin,
-          vitaminD3: saved.vitaminD3,
-          progesterone: saved.progesterone,
-          rbs: saved.rbs,
+          // labs 
+          betaHcg1: saved.betaHcg1, betaHcg2: saved.betaHcg2,
+          fsh: saved.fsh, lh: saved.lh, fshLhRatio: saved.fshLhRatio,
+          tsh: saved.tsh, amh: saved.amh, prolactin: saved.prolactin,
+          vitaminD3: saved.vitaminD3, progesterone: saved.progesterone, rbs: saved.rbs,
         },
       });
 
@@ -384,9 +302,6 @@ const sendDataToClinicalTextModel = async (req, res) => {
     } catch (e) {
       console.error("PDF generation failed (clinical):", e.message);
     }
-
-
-
 
     return res.status(200).json({
       message: "Prediction completed",
@@ -444,6 +359,10 @@ const sendImageToImageModel = async (req, res) => {
       timeout: 30000,
     });
 
+    // --- ADDED: Generate Recommendations ---
+    const recommendations = getRecommendations(mlResponse.data.risk_level, mlResponse.data.probability);
+    mlResponse.data.recommendations = recommendations;
+
     // 3) Save to Mongo
     const saved = await ImageTest.create({
       userId: req.user?._id,
@@ -455,7 +374,6 @@ const sendImageToImageModel = async (req, res) => {
       modelOutput: mlResponse.data,
     });
 
-
     let reportPdfBase64 = null;
     let reportFilename = null;
 
@@ -463,10 +381,9 @@ const sendImageToImageModel = async (req, res) => {
       const pdfBuffer = await generatePredictionPdfBuffer({
         inputMode: "image",
         submissionId: saved._id.toString(),
-        mlResult: mlResponse.data,
-        imageUrl: saved.imageUrl,
+        mlResult: mlResponse.data, // contains recommendations
+        imageUrl: saved.imageUrl, 
         inputSnapshot: {
-          imageUrl: saved.imageUrl,
           originalName: saved.originalName,
         },
       });
@@ -477,8 +394,7 @@ const sendImageToImageModel = async (req, res) => {
       console.error("PDF generation failed (image):", e.message);
     }
 
-
-    // 4) Return to frontend (same structure style as text controllers)
+    // 4) Return to frontend 
     return res.status(200).json({
       message: "Prediction completed",
       submissionId: saved._id,
@@ -497,9 +413,6 @@ const sendImageToImageModel = async (req, res) => {
     });
   }
 };
-
-
-
 
 const REQUIRED_COMBINED_KEYS = [
   "age_yrs",
@@ -570,31 +483,32 @@ const sendDataToCombinedModel = async (req, res) => {
       timeout: 30000,
     });
 
+    // --- ADDED: Generate Recommendations ---
+    const recommendations = getRecommendations(mlResponse.data.risk_level, mlResponse.data.probability);
+    mlResponse.data.recommendations = recommendations;
+
     // 3) Save to Mongo
     const saved = await CombinedDataTest.create({
       userId: req.user?._id,
-
       imageUrl: uploaded.secure_url,
       imagePublicId: uploaded.public_id,
       originalName: req.file.originalname,
       mimeType: req.file.mimetype,
       size: req.file.size,
-
       clinical,
       modelOutput: mlResponse.data,
     });
 
-    // 4) Generate PDF report right now (same pattern as your other models)
+    // 4) Generate PDF report right now 
     let report = null;
     try {
       const pdfBuffer = await generatePredictionPdfBuffer({
         inputMode: "combined",
         submissionId: saved._id.toString(),
-        mlResult: mlResponse.data,
+        mlResult: mlResponse.data, // contains recommendations
         imageUrl: saved.imageUrl,
         inputSnapshot: {
           ...clinical,
-          imageUrl: saved.imageUrl,
         },
       });
 
@@ -624,7 +538,6 @@ const sendDataToCombinedModel = async (req, res) => {
     });
   }
 };
-
 
 module.exports = {
   sendDataToSimpleTextModel,
