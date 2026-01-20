@@ -679,3 +679,11 @@ a, button, .btn, .btn-primary, .step-box, .card {
   transform: scale(1.05);
   box-shadow: 0 8px 20px rgba(214, 104, 156, 0.2);
 }
+
+/* 3. Feature Icons (Home Page) */
+.feature-icon:hover {
+  border: 2px solid var(--primary);
+  background-color: white;
+  color: var(--primary);
+  box-shadow: 0 5px 15px rgba(214, 104, 156, 0.3);
+}
