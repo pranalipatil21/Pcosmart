@@ -24,6 +24,7 @@ function App() {
               <Route path="/about" element={<AboutPCOS />} />
               <Route path="/login" element={<Login />} />
               <Route path="/register" element={<Register />} />
+              <Route path="/contact" element={<Contact />} />
               <Route path="/awareness" element={<Awareness />} />
             </Routes>
           </main>
