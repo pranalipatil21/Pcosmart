@@ -671,3 +671,11 @@ a, button, .btn, .btn-primary, .step-box, .card {
   transform: translateY(-5px); /* Slight lift */
   transition: all 0.3s ease;
 }
+
+/* 2. Step Boxes (How it works section) */
+.step-box:hover {
+  border-color: var(--primary);
+  background-color: #FFF5F8; /* Light pink background */
+  transform: scale(1.05);
+  box-shadow: 0 8px 20px rgba(214, 104, 156, 0.2);
+}
