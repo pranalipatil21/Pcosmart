@@ -693,3 +693,9 @@ a, button, .btn, .btn-primary, .step-box, .card {
   border: 2px solid var(--primary);
   box-shadow: 0 12px 25px rgba(214, 104, 156, 0.15);
 }
+
+/* 5. Option Cards (Questions) */
+.option-card:hover {
+  border-color: var(--primary);
+  background-color: #FFF5F8;
+}
