@@ -640,3 +640,22 @@ main { flex: 1; width: 100%; }
   border-radius: 8px;
   cursor: pointer;
 }
+
+/* ==========================================================================
+   GLOBAL CURSOR SETTINGS
+   ========================================================================== */
+
+/* 1. Default Cursor (The Stethoscope) */
+body, html {
+  /* 
+     Syntax: url('path'), x-offset y-offset, fallback 
+     0 0 means the "click" happens at the top-left corner of the image.
+  */
+  cursor: url('/s.png'), 0 0, auto; 
+}
+
+/* 2. Cursor for Buttons and Links (Interactive Feel) */
+/* You can use the same icon, or a different one for hovering */
+a, button, .btn, .btn-primary, .step-box, .card {
+  cursor: url('/s.png'), pointer; 
+}
