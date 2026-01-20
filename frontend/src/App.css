@@ -659,3 +659,15 @@ body, html {
 a, button, .btn, .btn-primary, .step-box, .card {
   cursor: url('/s.png'), pointer; 
 }
+
+/* =========================================
+   HOVER EFFECTS (Dark Pink Border)
+   ========================================= */
+
+/* 1. General Cards (Features, Test Uploads, Results) */
+.card:hover {
+  border: 2px solid var(--primary) !important; /* Forces the dark pink border */
+  box-shadow: 0 15px 30px rgba(214, 104, 156, 0.15); /* Soft pink shadow */
+  transform: translateY(-5px); /* Slight lift */
+  transition: all 0.3s ease;
+}
