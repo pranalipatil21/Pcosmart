@@ -705,3 +705,15 @@ a, button, .btn, .btn-primary, .step-box, .card {
   border-color: var(--primary);
   background-color: #FFF0F5;
 }
+
+/* Specific Fix for Info Cards (About Page) */
+.info-card,.myth-card, .fact-card {
+  transition: all 0.3s ease-in-out; /* Ensures smooth animation */
+  border: 1px solid #f8f8f8; /* Default light border */
+}
+
+.info-card:hover, .myth-card:hover, .fact-card:hover {
+  border: 2px solid var(--primary) !important; /* Forces Dark Pink Border */
+  box-shadow: 0 10px 25px rgba(214, 104, 156, 0.15); /* Soft Pink Shadow */
+  transform: translateY(-5px); /* Lift Effect */
+}
