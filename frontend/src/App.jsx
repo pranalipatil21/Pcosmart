@@ -13,6 +13,7 @@ import Awareness from './pages/Awareness';
 import Contact from './pages/Contact';
 import DietExercise from './pages/DietExercise';
 import SymptomTest from './pages/SymptomTest';
+import SymptomResult from './pages/SymptomResult';
 
 function App() {
   return (
@@ -34,6 +35,11 @@ function App() {
               {/* <Route path="/check/image" element={<ImageTest />} /> */}
               <Route path="/check/symptom" element={<SymptomTest />} />
               {/* <Route path="/check/combined" element={<CombinedTest />} /> */}
+
+              {/* Result Routes */}
+              {/* <Route path="/result/image" element={<ImageResult />} /> */}
+              <Route path="/result/symptom" element={<SymptomResult />} />
+              {/* <Route path="/result/combined" element={<CombinedResult />} /> */}
             </Routes>
           </main>
           <Footer />
