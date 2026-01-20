@@ -2,11 +2,11 @@
 ML-Services -
 change the directory to ml_services
 download and install python 3.11.7
-create a .venv enviroment
-activate the enviroment
-run pip install -r requirements.txt
+create a .venv enviroment  ->  py -3.11 -m venv .venv
+activate the enviroment ->  .\.venv\Scripts\Activate
+run -> pip install -r requirements.txt
 
-to start the servier run the command - uvicorn main:app --host 0.0.0.0 --port 8000 --reload
+to start the servier run the command -> uvicorn main:app --host 0.0.0.0 --port 8000 --reload
 
 
 

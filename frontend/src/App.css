@@ -536,3 +536,184 @@ main { flex: 1; width: 100%; }
   .action-buttons-container { flex-direction: column; gap: 20px; }
   .action-buttons-container .btn { width: 100%; justify-content: center; }
 }
+
+/* ==========================================================================
+   14. PCOS CHAT BOT
+   ========================================================================== */
+.chat-bot-container {
+  position: fixed;
+  bottom: 30px;
+  right: 30px;
+  z-index: 2000;
+}
+
+.chat-toggle-btn {
+  background: var(--primary);
+  color: white;
+  padding: 15px 25px;
+  border-radius: 50px;
+  border: none;
+  box-shadow: 0 10px 20px rgba(214, 104, 156, 0.4);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-weight: 600;
+  transition: 0.3s;
+}
+
+.chat-toggle-btn:hover { transform: scale(1.05); }
+
+.chat-window {
+  width: 350px;
+  height: 500px;
+  background: white;
+  border-radius: 20px;
+  box-shadow: 0 15px 40px rgba(0,0,0,0.15);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  border: 1px solid #f0f0f0;
+}
+
+.chat-header {
+  background: var(--primary);
+  color: white;
+  padding: 15px 20px;
+  display: flex;
+  justify-content: space-between;
+  font-weight: 700;
+}
+
+.chat-messages {
+  flex: 1;
+  padding: 20px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  background: #fdfbff;
+}
+
+.message-bubble {
+  padding: 10px 15px;
+  border-radius: 15px;
+  max-width: 85%;
+  font-size: 0.9rem;
+  line-height: 1.4;
+}
+
+.message-bubble.user {
+  background: var(--primary);
+  color: white;
+  align-self: flex-end;
+  border-bottom-right-radius: 2px;
+}
+
+.message-bubble.model {
+  background: #f1f1f1;
+  color: var(--text-main);
+  align-self: flex-start;
+  border-bottom-left-radius: 2px;
+}
+
+.chat-input-area {
+  padding: 15px;
+  border-top: 1px solid #eee;
+  display: flex;
+  gap: 10px;
+}
+
+.chat-input-area input {
+  flex: 1;
+  border: 1px solid #ddd;
+  padding: 10px;
+  border-radius: 10px;
+  outline: none;
+}
+
+.chat-input-area button {
+  background: var(--primary);
+  color: white;
+  border: none;
+  padding: 8px 15px;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+/* ==========================================================================
+   GLOBAL CURSOR SETTINGS
+   ========================================================================== */
+
+/* 1. Default Cursor (The Stethoscope) */
+body, html {
+  /* 
+     Syntax: url('path'), x-offset y-offset, fallback 
+     0 0 means the "click" happens at the top-left corner of the image.
+  */
+  cursor: url('/s.png'), 0 0, auto; 
+}
+
+/* 2. Cursor for Buttons and Links (Interactive Feel) */
+/* You can use the same icon, or a different one for hovering */
+a, button, .btn, .btn-primary, .step-box, .card {
+  cursor: url('/s.png'), pointer; 
+}
+
+/* =========================================
+   HOVER EFFECTS (Dark Pink Border)
+   ========================================= */
+
+/* 1. General Cards (Features, Test Uploads, Results) */
+.card:hover {
+  border: 2px solid var(--primary) !important; /* Forces the dark pink border */
+  box-shadow: 0 15px 30px rgba(214, 104, 156, 0.15); /* Soft pink shadow */
+  transform: translateY(-5px); /* Slight lift */
+  transition: all 0.3s ease;
+}
+
+/* 2. Step Boxes (How it works section) */
+.step-box:hover {
+  border-color: var(--primary);
+  background-color: #FFF5F8; /* Light pink background */
+  transform: scale(1.05);
+  box-shadow: 0 8px 20px rgba(214, 104, 156, 0.2);
+}
+
+/* 3. Feature Icons (Home Page) */
+.feature-icon:hover {
+  border: 2px solid var(--primary);
+  background-color: white;
+  color: var(--primary);
+  box-shadow: 0 5px 15px rgba(214, 104, 156, 0.3);
+}
+
+/* 4. Article & Video Cards (Awareness Page) */
+.article-card:hover, .video-card:hover, .story-card:hover {
+  border: 2px solid var(--primary);
+  box-shadow: 0 12px 25px rgba(214, 104, 156, 0.15);
+}
+
+/* 5. Option Cards (Questions) */
+.option-card:hover {
+  border-color: var(--primary);
+  background-color: #FFF5F8;
+}
+
+/* 6. Upload Zone */
+.upload-zone:hover {
+  border-color: var(--primary);
+  background-color: #FFF0F5;
+}
+
+/* Specific Fix for Info Cards (About Page) */
+.info-card,.myth-card, .fact-card {
+  transition: all 0.3s ease-in-out; /* Ensures smooth animation */
+  border: 1px solid #f8f8f8; /* Default light border */
+}
+
+.info-card:hover, .myth-card:hover, .fact-card:hover {
+  border: 2px solid var(--primary) !important; /* Forces Dark Pink Border */
+  box-shadow: 0 10px 25px rgba(214, 104, 156, 0.15); /* Soft Pink Shadow */
+  transform: translateY(-5px); /* Lift Effect */
+}
