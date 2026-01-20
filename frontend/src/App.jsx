@@ -11,6 +11,7 @@ import Register from './pages/Register';
 import AboutPCOS from './pages/AboutPCOS';
 import Awareness from './pages/Awareness';
 import Contact from './pages/Contact';
+import DietExercise from './pages/DietExercise';
 
 function App() {
   return (
@@ -26,6 +27,7 @@ function App() {
               <Route path="/register" element={<Register />} />
               <Route path="/contact" element={<Contact />} />
               <Route path="/awareness" element={<Awareness />} />
+              <Route path="/diet" element={<DietExercise />} />
             </Routes>
           </main>
           <Footer />
