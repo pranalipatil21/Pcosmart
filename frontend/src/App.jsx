@@ -14,6 +14,7 @@ import Contact from './pages/Contact';
 import DietExercise from './pages/DietExercise';
 import SymptomTest from './pages/SymptomTest';
 import SymptomResult from './pages/SymptomResult';
+import ImageTest from './pages/ImageTest';
 
 function App() {
   return (
@@ -32,7 +33,7 @@ function App() {
               <Route path="/diet" element={<DietExercise />} />
 
               {/* Test Routes */}
-              {/* <Route path="/check/image" element={<ImageTest />} /> */}
+              <Route path="/check/image" element={<ImageTest />} />
               <Route path="/check/symptom" element={<SymptomTest />} />
               {/* <Route path="/check/combined" element={<CombinedTest />} /> */}
 
