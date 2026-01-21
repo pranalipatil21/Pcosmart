@@ -12,9 +12,10 @@ const PORT = process.env.PORT || 5000;
 connectDB();
 
 app.use(cors({
-  origin: ["http://localhost:3000",
-           "https://pcosmart.vercel.app",
-            "https://pcosmart-mlservices.onrender.com"
+  origin: [
+    "http://localhost:3000",
+    "https://pcosmart.vercel.app",
+    "https://pcosmart-mlservices.onrender.com"
   ],
 
   credentials: true,
