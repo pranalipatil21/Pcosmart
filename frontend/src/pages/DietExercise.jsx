@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { FaAppleAlt, FaDumbbell, FaMoon, FaLeaf, FaBan, FaQuestion, FaChevronDown, FaPaperPlane, FaTimes } from 'react-icons/fa';
-const backendUrl = import.meta.env.VITE_BACKEND_URL || "http://localhost:5000/api"; 
+const backendUrl = import.meta.env.VITE_BACKEND_API_URL || "http://localhost:5000/api"; 
 
 const DietExercise = () => {
   // ==========================

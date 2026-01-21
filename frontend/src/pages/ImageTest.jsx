@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { FaCloudUploadAlt, FaInfoCircle, FaImage } from "react-icons/fa";
 import axios from "axios";
 import { useAssessment } from "../context/AssessmentContext";
-const backendUrl = import.meta.env.VITE_BACKEND_URL || "http://localhost:5000/api"; 
+const backendUrl = import.meta.env.VITE_BACKEND_API_URL || "http://localhost:5000/api"; 
 const IMAGE_MODEL_URL = `${backendUrl}/model/imageModel`;
 
 const ImageTest = () => {
