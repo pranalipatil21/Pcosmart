@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { FaAppleAlt, FaDumbbell, FaMoon, FaLeaf, FaBan, FaQuestion, FaChevronDown, FaPaperPlane, FaTimes } from 'react-icons/fa';
+const backendUrl = import.meta.env.VITE_BACKEND_URL || "http://localhost:5000/api"; 
 
 const DietExercise = () => {
   // ==========================
@@ -38,7 +39,7 @@ const handleChatSubmit = async (e) => {
       // Gemini requires the very first message in history to be 'user'
       const historyForBackend = chatHistory.filter((msg, index) => index > 0);
 
-      const response = await fetch('http://localhost:5000/api/auth/pcos-chatbot', {
+      const response = await fetch(`${backendUrl}/auth/pcos-chatbot`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ 

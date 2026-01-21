@@ -3,9 +3,9 @@ import { useNavigate } from "react-router-dom";
 import { FaCheck, FaArrowRight, FaArrowLeft } from "react-icons/fa";
 import axios from "axios";
 import { useAssessment } from "../context/AssessmentContext";
-
-const SIMPLE_URL = "http://localhost:5000/api/model/simpleTextModel";
-const CLINICAL_URL = "http://localhost:5000/api/model/clinicalTextModel";
+const backendUrl = import.meta.env.VITE_BACKEND_URL || "http://localhost:5000/api"; 
+const SIMPLE_URL = `${backendUrl}/model/simpleTextModel`;
+const CLINICAL_URL = `${backendUrl}/model/clinicalTextModel`;
 
 const symptomQuestions = [
   {
