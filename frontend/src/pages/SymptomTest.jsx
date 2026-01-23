@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { FaCheck, FaArrowRight, FaArrowLeft } from "react-icons/fa";
 import axios from "axios";
 import { useAssessment } from "../context/AssessmentContext";
-const backendUrl = import.meta.env.VITE_BACKEND_URL || "http://localhost:5000/api"; 
+const backendUrl = import.meta.env.VITE_BACKEND_API_URL || "http://localhost:5000/api"; 
 const SIMPLE_URL = `${backendUrl}/model/simpleTextModel`;
 const CLINICAL_URL = `${backendUrl}/model/clinicalTextModel`;
 
@@ -286,7 +286,7 @@ const SymptomTest = () => {
           Choose the assessment type, answer symptoms, then enter required health details.
         </p>
       </div>
-
+      <br></br>
       {/* STEP 1: choose */}
       {step === "choose" && (
         <div className="card text-center">

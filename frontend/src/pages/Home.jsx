@@ -1,7 +1,8 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { FaUpload, FaClipboardList, FaBrain, FaLeaf, FaArrowRight } from 'react-icons/fa';
+import { FaUpload, FaClipboardList, FaBrain, FaLeaf, FaArrowRight, FaChartLine } from 'react-icons/fa';
 import { useAuth } from '../context/AuthContext';
+import CountUp from '../components/CountUp'; // <--- IMPORT THIS
 
 // Import Three.js dependencies
 import * as THREE from 'three';
@@ -12,11 +13,9 @@ const Home = () => {
   const navigate = useNavigate();
   const { isLoggedIn } = useAuth();
   
-  // Ref for the 3D container
   const mountRef = useRef(null);
   const [loading, setLoading] = useState(true);
 
-  // Logic: Go to test if logged in, else register
   const handleStartCheck = () => {
     if (isLoggedIn) {
       navigate('/check/image');
@@ -25,54 +24,45 @@ const Home = () => {
     }
   };
 
-// --- Three.js Logic ---
+  // --- Three.js Logic ---
   useEffect(() => {
     const currentMount = mountRef.current;
-    
-    // 1. Scene Setup
+    if (!currentMount) return;
+
     const scene = new THREE.Scene();
     scene.background = new THREE.Color(0xfff5f8); 
 
-    // 2. Camera Setup
-    const camera = new THREE.PerspectiveCamera(75, currentMount.clientWidth / currentMount.clientHeight, 0.1, 1000);
-    
-    // --- FIX 1: Move Camera Back (Zoom Out) ---
-    // Changed 2.5 -> 12
-    camera.position.set(0, 0, 12); 
+    const camera = new THREE.PerspectiveCamera(45, currentMount.clientWidth / currentMount.clientHeight, 0.1, 1000);
+    camera.position.set(0, 5, 30); 
 
-    // 3. Renderer Setup
     const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
     renderer.setSize(currentMount.clientWidth, currentMount.clientHeight);
     renderer.setPixelRatio(window.devicePixelRatio);
     currentMount.appendChild(renderer.domElement);
 
-    // 4. Lights
     const ambientLight = new THREE.AmbientLight(0xffffff, 1.2);
     scene.add(ambientLight);
 
-    const dirLight = new THREE.DirectionalLight(0xffffff, 2);
-    dirLight.position.set(5, 10, 7.5);
+    const dirLight = new THREE.DirectionalLight(0xffffff, 1.5);
+    dirLight.position.set(10, 10, 10);
     scene.add(dirLight);
 
-    // 5. Controls
     const controls = new OrbitControls(camera, renderer.domElement);
     controls.enableDamping = true;
+    controls.dampingFactor = 0.05;
     controls.enableZoom = true;
+    controls.minDistance = 10;
+    controls.maxDistance = 50;
     controls.autoRotate = true; 
-    controls.autoRotateSpeed = 2.0;
+    controls.autoRotateSpeed = 1.5;
 
-    // 6. Load Model
     const loader = new GLTFLoader();
     
     loader.load('/uterus 3d model.glb', (gltf) => {
       const model = gltf.scene;
-      
-      // --- FIX 2: Adjust Scale ---
-      // Changed 25 -> 12 (Make it smaller so it fits screen)
-      const scaleFactor = 12; 
+      const scaleFactor = 10; 
       model.scale.set(scaleFactor, scaleFactor, scaleFactor);
 
-      // --- FIX 3: Center the Model ---
       const box = new THREE.Box3().setFromObject(model);
       const center = box.getCenter(new THREE.Vector3());
       model.position.x -= center.x;
@@ -86,7 +76,6 @@ const Home = () => {
       setLoading(false);
     });
 
-    // 7. Animation Loop
     let animationId;
     const animate = () => {
       animationId = requestAnimationFrame(animate);
@@ -95,7 +84,6 @@ const Home = () => {
     };
     animate();
 
-    // 8. Handle Resize
     const handleResize = () => {
       if (!currentMount) return;
       camera.aspect = currentMount.clientWidth / currentMount.clientHeight;
@@ -104,7 +92,6 @@ const Home = () => {
     };
     window.addEventListener('resize', handleResize);
 
-    // Cleanup
     return () => {
       window.removeEventListener('resize', handleResize);
       cancelAnimationFrame(animationId);
@@ -117,42 +104,78 @@ const Home = () => {
   
   return (
     <div>
-      {/* 1. Hero Section */}
+      
+      {/* 1. HERO SECTION */}
       <section className="hero">
-        <div className="container">
-          <span className="badge">AI-Powered Women's Health</span>
-          <h1>Early PCOS Screening <br /> <span style={{ color: 'var(--primary)' }}>Made Simple</span></h1>
-          <p>PCOSmart uses advanced AI to analyze ultrasound images and symptoms, providing personalized insights.</p>
-          
-          <div className="flex justify-center gap-20">
-            <button onClick={handleStartCheck} className="btn btn-primary">
-              Start Your Check <FaArrowRight />
-            </button>
-            
-            {!isLoggedIn && (
-              <Link to="/register" className="btn btn-outline">
-                Create Account
-              </Link>
-            )}
+        <div className="hero-wrapper">
+          <div className="hero-content-side">
+            <span className="badge">AI-Powered Women's Health</span>
+            <h1>
+              Early PCOS Screening <br /> 
+              <span style={{ color: 'var(--primary)' }}>Made Simple</span>
+            </h1>
+            <p>
+              PCOSmart uses advanced AI to analyze ultrasound images and symptoms, 
+              providing personalized insights. Join thousands of women taking control today.
+            </p>
+            <div className="flex gap-20" style={{ justifyContent: 'flex-start' }}>
+              <button onClick={handleStartCheck} className="btn btn-primary">
+                Start Your Check <FaArrowRight />
+              </button>
+              {!isLoggedIn && (
+                <Link to="/register" className="btn btn-outline">
+                  Create Account
+                </Link>
+              )}
+            </div>
+          </div>
+          <div className="hero-visual-side">
+            <div className="visual-card">
+              <img 
+                src="\pcos_stats.png" 
+                alt="PCOS Impact Visualization" 
+                className="visual-image"
+              />
+            </div>
           </div>
         </div>
       </section>
 
-      {/* Stats Section */}
+      {/* 2. STATS SECTION (ANIMATED) */}
       <section className="stats-section">
         <div className="container stats-grid">
-          <div><div className="stat-number">95%</div><div>Accuracy Rate</div></div>
-          <div><div className="stat-number">50K+</div><div>Women Helped</div></div>
-          <div><div className="stat-number">24/7</div><div>Available</div></div>
-          <div><div className="stat-number">100%</div><div>Private & Secure</div></div>
+          <div>
+            <div className="stat-number">
+              <CountUp end={95} suffix="%" />
+            </div>
+            <div>Accuracy Rate</div>
+          </div>
+          <div>
+            <div className="stat-number">
+              <CountUp end={"50K"} suffix="+" />
+            </div>
+            <div>Women Helped</div>
+          </div>
+          <div>
+            <div className="stat-number">
+              24/7
+            </div>
+            <div>Available</div>
+          </div>
+          <div>
+            <div className="stat-number">
+              <CountUp end={100} suffix="%" />
+            </div>
+            <div>Private & Secure</div>
+          </div>
         </div>
       </section>
 
-      {/* Features */}
+      {/* 3. Features */}
       <section className="container" style={{ padding: '80px 20px' }}>
         <div className="section-title">
           <h2>Why Choose PCOSmart?</h2>
-          <p style={{ maxWidth: '600px', margin: '0', color: '#718096', marginBottom: '20px' }}>Our comprehensive approach combines cutting-edge AI technology with medical expertise.</p>
+          <p style={{ maxWidth: '600px', margin: '0 auto', color: '#718096' }}>Our comprehensive approach combines cutting-edge AI technology with medical expertise.</p>
         </div>
         <div className="features-grid">
           <div className="card">
@@ -211,7 +234,7 @@ const Home = () => {
         </div>
       </section>
 
-      {/* NEW: 3D Model Section */}
+      {/* 3D Model Section */}
       <section className="model-section">
         <div className="container">
           <div className="model-content">

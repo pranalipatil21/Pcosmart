@@ -16,7 +16,6 @@ const Awareness = () => {
   // DATA SECTIONS
   // =========================================
 
-  // 1. Articles with Real URLs
   const articles = [
     {
       category: "Education",
@@ -56,29 +55,54 @@ const Awareness = () => {
     }
   ];
 
-  // 2. Videos with Real YouTube URLs (Thumbnails will be auto-generated)
   const videos = [
     {
       title: "PCOS Explained by Experts",
       desc: "Medical experts break down PCOS causes and treatments.",
       duration: "12:34",
-      videoUrl: "https://youtu.be/Zrwzv3-SP7c?si=hN1oMLmQgqPefd5a" // Real PCOS Video ID
+      videoUrl: "https://youtu.be/Zrwzv3-SP7c?si=hN1oMLmQgqPefd5a" 
     },
     {
       title: "30-Minute PCOS-Friendly Workout",
       desc: "Low-impact exercises designed for hormonal balance.",
       duration: "31:20",
-      videoUrl: "https://youtu.be/c57ksNThbKQ?si=fCm-q-w-02hOv3ex" // Generic Workout ID
+      videoUrl: "https://youtu.be/c57ksNThbKQ?si=fCm-q-w-02hOv3ex" 
     },
     {
       title: "Meal Prep for PCOS: Week of Recipes",
       desc: "Delicious anti-inflammatory meals for the whole week.",
       duration: "18:45",
-      videoUrl: "https://youtu.be/pFnAXV5tgJE?si=-KyYlPDVf86sqERF" // Meal Prep ID
+      videoUrl: "https://youtu.be/pFnAXV5tgJE?si=-KyYlPDVf86sqERF" 
+    },
+    {
+      title: "Yoga for PCOD & Hormonal Balance",
+      desc: "A gentle yoga flow to help regulate hormones and reduce stress.",
+      duration: "54:02",
+      videoUrl: "https://www.youtube.com/watch?v=2sASEAoJrm0"
+    },
+    {
+      title: "The PCOS Plate Method",
+      desc: "A beginner's guide to eating for PCOS weight loss without restrictive dieting.",
+      duration: "15:25",
+      videoUrl: "https://www.youtube.com/watch?v=rj9Fny7CPJ4"
+    },
+    {
+       title: "Best Supplements for PCOS",
+       desc: "Expert advice on Inositol, Vitamin D, and other essential nutrients.",
+       duration: "03:57",
+       videoUrl: "https://www.youtube.com/watch?v=L6e3EoWDKlU"
+    },
+    {
+      title: "PCOS and Mental Health",
+      desc: "Understanding the emotional impact of PCOS and how to cope.",
+      duration: "06:19",
+      videoUrl: "https://www.youtube.com/watch?v=sfgB_mmQhPc"
     }
   ];
 
-  // 3. Tips Data
+  // *** DUPLICATE VIDEOS FOR INFINITE SCROLL EFFECT ***
+  const scrollingVideos = [...videos, ...videos];
+
   const tips = [
     "Track your menstrual cycle using an app to identify patterns",
     "Stay hydrated - aim for at least 8 glasses of water daily",
@@ -91,16 +115,18 @@ const Awareness = () => {
   return (
     <div className="container page-spacing">
       
-      {/* 1. HERO SECTION */}
-      <div className="text-center mb-16">
-        <span className="badge">PCOS Awareness</span>
-        <h1 style={{ fontSize: '3rem', margin: '15px 0' }}>
-          Knowledge is <span style={{ color: '#D6689C' }}>Power</span>
-        </h1>
-        <p className="awareness-hero-text">
-          Explore articles, videos, and real stories from women managing PCOS. 
-          Education is the first step towards empowerment.
-        </p>
+      {/* 1. HERO SECTION - UPDATED */}
+      <div className="awareness-hero-card mb-16">
+        <div className="hero-content">
+          <span className="hero-badge">Lifestyle Guide</span>
+          <h1 className="hero-title">
+            Knowledge <span style={{ fontFamily: 'serif', fontStyle: 'italic' }}>is</span> <span className="text-highlight">Power</span>
+          </h1>
+          <p className="hero-subtitle">
+            Explore articles, videos, and real stories from women managing PCOS. 
+            Education is the first step towards empowerment.
+          </p>
+        </div>
       </div>
 
       {/* 2. FEATURED ARTICLES */}
@@ -122,8 +148,6 @@ const Awareness = () => {
             </div>
             <h3 className="article-title">{item.title}</h3>
             <p className="article-desc">{item.desc}</p>
-            
-            {/* External Link */}
             <a href={item.link} target="_blank" rel="noopener noreferrer" className="read-link">
               Read More <FaExternalLinkAlt size={12} />
             </a>
@@ -131,7 +155,7 @@ const Awareness = () => {
         ))}
       </div>
 
-      {/* 3. VIDEO LIBRARY (With Thumbnails) */}
+      {/* 3. VIDEO LIBRARY (AUTO SCROLLING) */}
       <div className="diet-section-header" style={{ textAlign: 'left', display: 'flex', alignItems: 'center', gap: '15px', marginBottom: '30px' }}>
         <div className="icon-header-lg" style={{ margin: 0 }}>
           <FaVideo />
@@ -139,47 +163,48 @@ const Awareness = () => {
         <h2 style={{ fontSize: '2rem', margin: 0 }}>Video <span style={{ color: '#D6689C' }}>Library</span></h2>
       </div>
 
-      <div className="result-grid-3" style={{ marginBottom: '80px', marginTop: '0' }}>
-        {videos.map((video, index) => {
-          // Generate Thumbnail URL
-          const videoID = getYouTubeID(video.videoUrl);
-          const thumbUrl = videoID 
-            ? `https://img.youtube.com/vi/${videoID}/hqdefault.jpg` 
-            : 'https://via.placeholder.com/320x180.png?text=No+Thumbnail';
+      {/* Slider Viewport */}
+      <div className="slider-viewport" style={{ marginBottom: '80px', marginTop: '0' }}>
+        {/* Moving Track */}
+        <div className="slider-track">
+          {scrollingVideos.map((video, index) => {
+            const videoID = getYouTubeID(video.videoUrl);
+            const thumbUrl = videoID 
+              ? `https://img.youtube.com/vi/${videoID}/hqdefault.jpg` 
+              : 'https://via.placeholder.com/320x180.png?text=No+Thumbnail';
 
-          return (
-            <a 
-              key={index} 
-              href={video.videoUrl} 
-              target="_blank" 
-              rel="noopener noreferrer" 
-              style={{ textDecoration: 'none', color: 'inherit' }}
-            >
-              <div className="video-card">
-                {/* Thumbnail Container */}
-                <div className="video-thumbnail" style={{ padding: 0, overflow: 'hidden', position: 'relative', height: '200px' }}>
-                  <img 
-                    src={thumbUrl} 
-                    alt={video.title} 
-                    style={{ width: '100%', height: '100%', objectFit: 'cover' }} 
-                  />
-                  {/* Play Button Overlay */}
-                  <div style={{ position: 'absolute', inset: 0, background: 'rgba(0,0,0,0.2)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                    <div className="play-btn-circle">
-                      <FaPlay style={{ marginLeft: '4px' }} />
+            return (
+              <a 
+                key={index} 
+                href={video.videoUrl} 
+                target="_blank" 
+                rel="noopener noreferrer" 
+                style={{ textDecoration: 'none', color: 'inherit' }}
+                className="video-slide-item"
+              >
+                <div className="video-card">
+                  <div className="video-thumbnail" style={{ padding: 0, overflow: 'hidden', position: 'relative', height: '200px' }}>
+                    <img 
+                      src={thumbUrl} 
+                      alt={video.title} 
+                      style={{ width: '100%', height: '100%', objectFit: 'cover' }} 
+                    />
+                    <div style={{ position: 'absolute', inset: 0, background: 'rgba(0,0,0,0.2)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                      <div className="play-btn-circle">
+                        <FaPlay style={{ marginLeft: '4px' }} />
+                      </div>
                     </div>
+                    <span className="duration-badge">{video.duration}</span>
                   </div>
-                  <span className="duration-badge">{video.duration}</span>
+                  <div className="video-content">
+                    <h4 className="video-title">{video.title}</h4>
+                    <p style={{ fontSize: '0.9rem', color: '#718096' }}>{video.desc}</p>
+                  </div>
                 </div>
-                
-                <div className="video-content">
-                  <h4 className="video-title">{video.title}</h4>
-                  <p style={{ fontSize: '0.9rem', color: '#718096' }}>{video.desc}</p>
-                </div>
-              </div>
-            </a>
-          );
-        })}
+              </a>
+            );
+          })}
+        </div>
       </div>
 
       {/* 4. DAILY TIPS */}

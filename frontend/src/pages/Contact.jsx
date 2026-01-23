@@ -5,18 +5,21 @@ const Contact = () => {
   return (
     <div className="container page-spacing">
       
-      {/* 1. HEADER SECTION */}
-      <div className="text-center mb-12">
-        <span className="badge">Get in Touch</span>
-        <h1 style={{ fontSize: '3rem', margin: '15px 0' }}>
-          Contact <span style={{ color: '#D6689C' }}>Us</span>
-        </h1>
-        <p style={{ color: '#718096', maxWidth: '600px', margin: '0 auto' }}>
-          Have questions about PCOS or our platform? We're here to help. 
-          Reach out and we'll respond as soon as we can.
-        </p>
+      {/* 1. HEADER SECTION - UPDATED */}
+      <div className="contact-hero-card mb-12">
+        <div className="hero-content text-center">
+          <span className="hero-badge">24/7 Support</span>
+          <h1 className="hero-title">
+            Contact <span style={{ fontFamily: 'serif', fontStyle: 'italic', color: '#D6689C' }}>US</span>
+          </h1>
+          <p className="hero-subtitle">
+            Have questions about PCOS or our platform? We're here to help. 
+            Reach out and we'll respond as soon as we can.
+          </p>
+        </div>
       </div>
-      <br></br> 
+      
+      <br />
       <div className="contact-grid">
         
         {/* 2. LEFT COLUMN: FORM */}
