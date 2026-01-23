@@ -286,7 +286,7 @@ const SymptomTest = () => {
           Choose the assessment type, answer symptoms, then enter required health details.
         </p>
       </div>
-
+      <br></br>
       {/* STEP 1: choose */}
       {step === "choose" && (
         <div className="card text-center">

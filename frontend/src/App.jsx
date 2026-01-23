@@ -6,17 +6,17 @@ import { AuthProvider } from './context/AuthContext'; // <--- Import this
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
 import Home from './pages/Home';
+import AboutPCOS from './pages/AboutPCOS';
 import Login from './pages/Login';
 import Register from './pages/Register';
-import AboutPCOS from './pages/AboutPCOS';
-import Awareness from './pages/Awareness';
 import Contact from './pages/Contact';
+import Awareness from './pages/Awareness';
 import DietExercise from './pages/DietExercise';
-import SymptomTest from './pages/SymptomTest';
-import SymptomResult from './pages/SymptomResult';
 import ImageTest from './pages/ImageTest';
-import ImageResult from './pages/ImageResult';
+import SymptomTest from './pages/SymptomTest';
 import CombinedTest from './pages/CombinedTest';
+import ImageResult from './pages/ImageResult';
+import SymptomResult from './pages/SymptomResult';
 import CombinedResult from './pages/CombinedResult';
 
 function App() {
@@ -34,7 +34,7 @@ function App() {
               <Route path="/contact" element={<Contact />} />
               <Route path="/awareness" element={<Awareness />} />
               <Route path="/diet" element={<DietExercise />} />
-
+              
               {/* Test Routes */}
               <Route path="/check/image" element={<ImageTest />} />
               <Route path="/check/symptom" element={<SymptomTest />} />

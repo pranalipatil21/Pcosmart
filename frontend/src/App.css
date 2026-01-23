@@ -195,16 +195,126 @@ main { flex: 1; width: 100%; }
 /* ==========================================================================
    5. HOME PAGE
    ========================================================================== */
-.hero {
-  padding-top: 120px; /* Spacing from Navbar */
-  padding-bottom: 80px;
-  padding-left: 20px; padding-right: 20px;
-  text-align: center;
-  background: radial-gradient(circle at center, #fff0f6 0%, #fff5f8 100%);
-}
-.hero h1 { font-size: 3.5rem; margin-bottom: 20px; line-height: 1.2; }
-.hero p { font-size: 1.2rem; color: var(--text-light); max-width: 700px; margin: 0 auto 40px auto; }
 
+
+.hero {
+  /* Layout */
+  display: flex;
+  align-items: center;
+  justify-content: center; /* Centers the inner container */
+  
+  /* Spacing */
+  padding-top: 140px;
+  padding-bottom: 100px;
+  
+  /* Background */
+  background: radial-gradient(circle at top left, #fff0f6 0%, #fff5f8 100%);
+  position: relative;
+  overflow: hidden;
+  min-height: 85vh; /* Taller hero section */
+}
+
+/* --- THE LOGO WATERMARK --- */
+.hero::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 25%; /* Adjusted position */
+  transform: translate(-50%, -50%);
+  
+  width: 700px; 
+  height: 700px;
+  
+  /* 🟢 REPLACE THIS URL WITH YOUR LOGO LINK */
+  background-image: url('https://via.placeholder.com/600x600.png?text=YOUR+LOGO'); 
+  
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: contain;
+  opacity: 0.05; /* Subtle fade */
+  z-index: 0;
+  pointer-events: none;
+}
+
+/* --- HERO INNER CONTAINER --- */
+/* This wrapper ensures the content stays max-width 1200px */
+.hero-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  max-width: 1200px;
+  padding: 0 20px;
+  z-index: 2; /* Keeps content above watermark */
+  margin: 0 auto; /* Centers the block */
+}
+
+/* --- LEFT SIDE: TEXT --- */
+.hero-content-side {
+  flex: 1;
+  max-width: 550px;
+  text-align: left;
+}
+
+.hero h1 {
+  font-size: 4.2rem;
+  line-height: 1.1;
+  margin-bottom: 25px;
+  color: #2D3748;
+}
+
+.hero p {
+  font-size: 1.2rem;
+  color: #718096;
+  margin-bottom: 40px;
+  line-height: 1.8;
+}
+
+/* --- RIGHT SIDE: VISUAL (Image) --- */
+.hero-visual-side {
+  flex: 1;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.visual-card {
+  background: white;
+  padding: 15px;
+  border-radius: 24px;
+  box-shadow: 0 20px 50px rgba(214, 104, 156, 0.2); /* Pink glow shadow */
+  border: 1px solid rgba(255, 255, 255, 0.8);
+  max-width: 600px;
+  width: 100%;
+  transition: transform 0.3s ease;
+}
+
+.visual-card:hover {
+  transform: translateY(-5px);
+}
+
+.visual-image {
+  width: 100%;
+  height: auto;
+  border-radius: 16px;
+  display: block;
+}
+
+/* --- MOBILE RESPONSIVE --- */
+@media (max-width: 1000px) {
+  .hero-wrapper {
+    flex-direction: column;
+    text-align: center;
+    gap: 60px;
+  }
+  .hero-content-side {
+    max-width: 100%;
+    text-align: center;
+  }
+  .hero-visual-side {
+    justify-content: center;
+  }
+  .hero h1 { font-size: 3rem; }
+}
 .badge {
   background: #fce7f3; color: var(--primary);
   padding: 5px 15px; border-radius: 20px;
@@ -343,24 +453,181 @@ main { flex: 1; width: 100%; }
 .btn-register-full { width: 100%; background: linear-gradient(90deg, #D6689C 0%, #C068D6 100%); color: white; padding: 16px; border-radius: 12px; font-weight: 600; font-size: 1rem; border: none; cursor: pointer; margin-top: 10px; transition: opacity 0.2s; }
 .btn-register-full:hover { opacity: 0.9; }
 
+
 /* ==========================================================================
-   7. ABOUT PAGE SPECIFIC
+   7. ABOUT PAGE SPECIFIC (Enhanced)
    ========================================================================== */
-.about-header-section { text-align: center; padding: 60px 20px 40px; }
-.info-card { background: white; padding: 40px; border-radius: 20px; box-shadow: 0 4px 20px rgba(0,0,0,0.03); margin-bottom: 30px; border: 1px solid #f8f8f8; }
-.icon-square { width: 50px; height: 50px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 1.4rem; color: white; margin-bottom: 20px; }
-.check-list-vertical { display: flex; flex-direction: column; gap: 12px; }
-.check-item-red { display: flex; align-items: flex-start; gap: 12px; color: #4A5568; }
-.icon-circle-outline { min-width: 20px; color: #D6689C; margin-top: 4px; }
 
-/* Myths vs Facts */
-.myth-fact-container { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 20px; }
-.myth-card { background-color: #FFF5F5; border: 1px solid #FED7D7; padding: 25px; border-radius: 12px; }
-.fact-card { background-color: #FFF5F8; border: 1px solid #FBCFE8; padding: 25px; border-radius: 12px; }
-.myth-label { display: flex; align-items: center; gap: 8px; color: #E53E3E; font-weight: 600; margin-bottom: 10px; font-size: 0.9rem; }
-.fact-label { display: flex; align-items: center; gap: 8px; color: #D6689C; font-weight: 600; margin-bottom: 10px; font-size: 0.9rem; }
-.myth-fact-text { color: #2D3748; font-size: 0.95rem; line-height: 1.5; }
+/* 1. HERO SECTION WITH BACKGROUND IMAGE */
+.about-header-section { 
+  text-align: center; 
+  padding: 100px 20px; 
+  background: linear-gradient(rgba(45, 55, 72, 0.7), rgba(45, 55, 72, 0.7)), 
+              url('https://images.unsplash.com/photo-1579684385127-1ef15d508118?q=80&w=1600&auto=format&fit=crop');
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed; /* Parallax effect */
+  border-radius: 24px;
+  margin-bottom: 60px;
+  color: white;
+  box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+}
 
+/* Override text colors inside header to be white/light */
+.about-header-section h1 { color: white; }
+.about-header-section p { color: #E2E8F0; }
+.about-header-section .badge { background: rgba(255,255,255,0.2); color: white; backdrop-filter: blur(5px); }
+
+/* 2. SPLIT LAYOUT CARDS (Image + Text) */
+.info-card { 
+  background: white; 
+  border-radius: 24px; 
+  box-shadow: 0 10px 30px rgba(0,0,0,0.05); 
+  margin-bottom: 50px; 
+  border: 1px solid #f0f0f0; 
+  overflow: hidden; /* Keeps image inside border */
+  padding: 0; /* Remove default padding to let image touch edges */
+}
+
+.info-card-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  align-items: center;
+}
+
+.info-card-content {
+  padding: 50px;
+}
+
+.info-card-image {
+  width: 100%;
+  height: 100%;
+  min-height: 400px;
+  object-fit: cover;
+}
+
+.icon-square { 
+  width: 60px; height: 60px; 
+  border-radius: 16px; 
+  display: flex; align-items: center; justify-content: center; 
+  font-size: 1.6rem; color: white; margin-bottom: 25px; 
+  box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+}
+
+.check-list-vertical { display: flex; flex-direction: column; gap: 15px; }
+.check-item-red { display: flex; align-items: center; gap: 15px; color: #4A5568; font-size: 1rem; }
+.icon-circle-outline { min-width: 24px; color: #D6689C; margin-top: 2px; }
+
+/* 3. MYTHS VS FACTS (Attractive Cards) */
+.myth-fact-grid-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+}
+
+.myth-fact-container { 
+  display: grid; 
+  grid-template-columns: 1fr 1fr; 
+  gap: 30px; 
+  margin-bottom: 0; 
+}
+
+.myth-card, .fact-card {
+  padding: 30px;
+  border-radius: 20px;
+  transition: transform 0.3s ease;
+  position: relative;
+  border: none;
+}
+
+.myth-card { 
+  background-color: #FFF5F5; 
+  border-left: 6px solid #FC8181;
+}
+
+.fact-card { 
+  background-color: #F0FFF4; 
+  border-left: 6px solid #68D391;
+}
+
+.myth-card:hover, .fact-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 15px 30px rgba(0,0,0,0.08);
+}
+
+.myth-label { 
+  display: flex; align-items: center; gap: 10px; 
+  color: #C53030; font-weight: 800; margin-bottom: 15px; 
+  font-size: 1rem; letter-spacing: 1px; text-transform: uppercase;
+}
+
+.fact-label { 
+  display: flex; align-items: center; gap: 10px; 
+  color: #2F855A; font-weight: 800; margin-bottom: 15px; 
+  font-size: 1rem; letter-spacing: 1px; text-transform: uppercase;
+}
+
+.myth-fact-text { 
+  color: #4A5568; font-size: 1.05rem; line-height: 1.6; font-weight: 500;
+}
+
+/* Responsive Fixes */
+@media (max-width: 900px) {
+  .info-card-grid { grid-template-columns: 1fr; }
+  .info-card-image { height: 250px; min-height: auto; }
+  .info-card-content { padding: 30px; }
+  .myth-fact-container { grid-template-columns: 1fr; gap: 15px; }
+}
+/* --- Optimized Spacing & Alignment --- */
+
+/* Tighten the Symptoms list to fit next to an image */
+.symptoms-split-grid {
+    display: grid;
+    grid-template-columns: 1fr; 
+    gap: 12px;
+    margin-top: 10px;
+}
+
+/* ROOT CAUSES: Fixed large empty space with a subtle background box */
+.causes-compact-container {
+    background: #fdf4f9; 
+    padding: 25px;
+    border-radius: 20px;
+    margin-top: 15px;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    border: 1px solid rgba(214, 104, 156, 0.1);
+}
+
+/* Ensure images fill their container properly */
+.info-card-image {
+    width: 100%;
+    height: 100%;
+    min-height: 400px;
+    object-fit: cover;
+    display: block;
+}
+
+/* Global Navbar Distance */
+.page-spacing {
+    margin-top: 60px; /* Adjust this based on your navbar height */
+}
+
+/* CTA Banner Modern styling */
+.cta-card {
+    text-align: center; 
+    padding: 60px 40px; 
+    border: none !important; 
+    background: linear-gradient(135deg, #FFF5F8 0%, #FFFFFF 100%);
+    box-shadow: 0 20px 40px rgba(214, 104, 156, 0.1);
+}
+
+@media (min-width: 1100px) {
+    .symptoms-split-grid {
+        grid-template-columns: 1fr 1fr; /* Two columns on desktop */
+    }
+}
 /* ==========================================================================
    8. RESULT & TEST PAGES
    ========================================================================== */
@@ -440,17 +707,136 @@ main { flex: 1; width: 100%; }
 /* ==========================================================================
    10. AWARENESS & FAQ
    ========================================================================== */
-.awareness-hero-text { font-size: 1.1rem; color: #718096; max-width: 700px; margin: 0 auto; }
+/* ==========================================================================
+   AWARENESS HERO SECTION (New)
+   ========================================================================== */
+.awareness-hero-card {
+  /* Healthy Food Background Image */
+  background: 
+    linear-gradient(90deg, rgba(255,245,248,0.95) 0%, rgba(255,255,255,0.85) 50%, rgba(255,255,255,0.4) 100%),
+    url('https://thumbs.dreamstime.com/b/serene-landscape-sailing-boats-woman-books-sunset-over-misty-ocean-409726604.jpg');
+  background-size: cover;
+  background-position: center;
+  border-radius: 24px;
+  padding: 80px 20px;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 15px 35px rgba(214, 104, 156, 0.15);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
 
-.article-card { background: white; border: 1px solid #F0F0F0; border-radius: 16px; padding: 30px; transition: 0.3s; height: 100%; display: flex; flex-direction: column; }
-.article-card:hover { transform: translateY(-5px); box-shadow: 0 10px 25px rgba(0,0,0,0.05); border-color: #FBCFE8; }
+.hero-content {
+  max-width: 700px;
+  z-index: 2;
+}
+
+.hero-badge {
+  background: white;
+  color: #D6689C;
+  padding: 8px 20px;
+  border-radius: 30px;
+  font-size: 0.85rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  box-shadow: 0 4px 15px rgba(214, 104, 156, 0.2);
+  display: inline-block;
+  margin-bottom: 20px;
+}
+
+.hero-title {
+  font-size: 3.5rem;
+  color: #2D3748;
+  margin: 10px 0 20px 0;
+  font-family: 'Playfair Display', serif; /* Or system serif */
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+.text-highlight {
+  color: #D6689C;
+  position: relative;
+  display: inline-block;
+}
+
+.hero-subtitle {
+  font-size: 1.1rem;
+  color: #4A5568;
+  line-height: 1.6;
+  font-weight: 500;
+}
+
+/* ==========================================================================
+   UPDATED FEATURED ARTICLE CARDS (Attractive Effects)
+   ========================================================================== */
+.article-card {
+  background: white;
+  border: 1px solid #F0F0F0;
+  border-radius: 20px;
+  padding: 30px;
+  transition: all 0.4s ease;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  overflow: hidden;
+  z-index: 1;
+}
+
+/* Hover Effect: Lift, Shadow, and Gradient Border look */
+.article-card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 20px 40px rgba(214, 104, 156, 0.12);
+  border-color: transparent;
+}
+
+/* Creating a soft gradient background on hover */
+.article-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(135deg, #FFF, #FFF0F6);
+  opacity: 0;
+  z-index: -1;
+  transition: opacity 0.4s ease;
+}
+
+.article-card:hover::before {
+  opacity: 1;
+}
+
+/* Accent line on the left that grows on hover */
+.article-card::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 4px;
+  height: 0%;
+  background-color: #D6689C;
+  border-radius: 0 4px 4px 0;
+  transition: height 0.4s ease;
+}
+
+.article-card:hover::after {
+  height: 70%;
+}
+
+/* Keep existing inner element styles but ensure Z-index is correct */
 .article-meta { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
-.article-tag { background: #FFF5F5; color: #D6689C; padding: 4px 12px; border-radius: 20px; font-size: 0.75rem; font-weight: 700; text-transform: uppercase; }
-.read-time { font-size: 0.8rem; color: #A0AEC0; }
-.article-title { font-size: 1.25rem; font-weight: 700; margin-bottom: 10px; color: #2D3748; }
-.article-desc { font-size: 0.95rem; color: #718096; margin-bottom: 20px; flex-grow: 1; }
-.read-link { color: #D6689C; font-weight: 600; font-size: 0.9rem; display: flex; align-items: center; gap: 6px; }
-.read-link:hover { text-decoration: underline; }
+.article-tag { background: #FFF5F5; color: #D6689C; padding: 5px 14px; border-radius: 20px; font-size: 0.75rem; font-weight: 700; letter-spacing: 0.5px; text-transform: uppercase; }
+.read-time { font-size: 0.8rem; color: #A0AEC0; font-weight: 500; }
+.article-title { font-size: 1.35rem; font-weight: 700; margin-bottom: 12px; color: #2D3748; line-height: 1.4; }
+.article-desc { font-size: 0.95rem; color: #718096; margin-bottom: 25px; flex-grow: 1; line-height: 1.6; }
+.read-link { color: #D6689C; font-weight: 700; font-size: 0.9rem; display: flex; align-items: center; gap: 8px; transition: gap 0.2s; }
+.read-link:hover { text-decoration: none; gap: 12px; }
 
 .video-card { background: white; border-radius: 16px; overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.03); border: 1px solid #F7FAFC; transition: 0.3s; }
 .video-card:hover { transform: translateY(-3px); }
@@ -482,6 +868,134 @@ main { flex: 1; width: 100%; }
 /* ==========================================================================
    11. CONTACT PAGE
    ========================================================================== */
+/* ==========================================================================
+   CONTACT HERO SECTION (New)
+   ========================================================================== */
+.contact-hero-card {
+  /* Clean desk/communication background image */
+  background: 
+    linear-gradient(180deg, rgba(255,255,255,0.9) 0%, rgba(255,245,248,0.85) 100%),
+    url('https://images.unsplash.com/photo-1534536281715-e28d76689b4d?q=80&w=2070&auto=format&fit=crop');
+  background-size: cover;
+  background-position: center;
+  border-radius: 24px;
+  padding: 60px 20px;
+  box-shadow: 0 15px 35px rgba(214, 104, 156, 0.1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 50px;
+  border: 1px solid white;
+}
+
+.hero-badge {
+  background: white;
+  color: #D6689C;
+  padding: 6px 16px;
+  border-radius: 30px;
+  font-size: 0.8rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  box-shadow: 0 4px 10px rgba(214, 104, 156, 0.15);
+  display: inline-block;
+  margin-bottom: 15px;
+}
+
+.hero-title {
+  font-size: 3rem;
+  color: #2D3748;
+  margin: 10px 0 15px 0;
+  font-weight: 800;
+  letter-spacing: -1px;
+}
+
+.hero-subtitle {
+  color: #718096;
+  max-width: 600px;
+  margin: 0 auto;
+  font-size: 1.05rem;
+  line-height: 1.6;
+}
+
+/* ==========================================================================
+   ATTRACTIVE CARD EFFECTS
+   ========================================================================== */
+
+/* 1. The Contact Form Card */
+.contact-form-card { 
+  background: white; 
+  padding: 40px; 
+  border-radius: 24px; 
+  /* Soft double shadow for depth */
+  box-shadow: 
+    0 10px 30px rgba(0,0,0,0.04),
+    0 1px 3px rgba(0,0,0,0.02);
+  border: 1px solid #F7FAFC; 
+  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); /* Bouncy effect */
+  position: relative;
+  z-index: 1;
+}
+
+/* Hover Effect: Lifts up and glow intensifies */
+.contact-form-card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 20px 40px rgba(214, 104, 156, 0.15);
+  border-color: #FBCFE8;
+}
+
+/* 2. The Purple Info Card Effect */
+.info-card-purple { 
+  background: linear-gradient(135deg, #D6689C 0%, #B370B0 100%); 
+  color: white; 
+  padding: 35px; 
+  border-radius: 24px; 
+  margin-bottom: 25px; 
+  box-shadow: 0 10px 25px rgba(214, 104, 156, 0.3);
+  transition: transform 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Subtle shine effect on hover for purple card */
+.info-card-purple::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+  transition: 0.5s;
+}
+
+.info-card-purple:hover::before {
+  left: 100%;
+}
+
+.info-card-purple:hover {
+  transform: translateY(-5px);
+}
+
+/* 3. Input Field Effects */
+.form-input, .form-textarea {
+  width: 100%; 
+  padding: 14px 18px; /* Slightly bigger padding */
+  border: 2px solid #EDF2F7; /* Thicker, lighter border initially */
+  border-radius: 12px;
+  font-size: 0.95rem; 
+  font-family: 'Poppins', sans-serif; 
+  transition: all 0.3s ease; 
+  background-color: #FAFAFA;
+}
+
+.form-input:focus, .form-textarea:focus { 
+  border-color: #D6689C; 
+  outline: none; 
+  background-color: white; 
+  box-shadow: 0 0 0 4px rgba(214, 104, 156, 0.1); /* Soft glow ring */
+  transform: scale(1.01); /* Micro interaction zoom */
+}
 .contact-grid { display: grid; grid-template-columns: 1.5fr 1fr; gap: 30px; align-items: start; }
 .contact-form-card { background: white; padding: 40px; border-radius: 20px; box-shadow: 0 5px 20px rgba(0,0,0,0.05); border: 1px solid #F0F0F0; }
 .form-header { display: flex; align-items: center; gap: 12px; margin-bottom: 30px; color: #2D3748; }
@@ -641,6 +1155,7 @@ main { flex: 1; width: 100%; }
   cursor: pointer;
 }
 
+
 /* ==========================================================================
    GLOBAL CURSOR SETTINGS
    ========================================================================== */
@@ -659,6 +1174,7 @@ body, html {
 a, button, .btn, .btn-primary, .step-box, .card {
   cursor: url('/s.png'), pointer; 
 }
+
 
 /* =========================================
    HOVER EFFECTS (Dark Pink Border)
@@ -716,4 +1232,417 @@ a, button, .btn, .btn-primary, .step-box, .card {
   border: 2px solid var(--primary) !important; /* Forces Dark Pink Border */
   box-shadow: 0 10px 25px rgba(214, 104, 156, 0.15); /* Soft Pink Shadow */
   transform: translateY(-5px); /* Lift Effect */
+}
+
+/* =========================================
+   AUTO-SCROLLING VIDEO SLIDER (INFINITE LOOP)
+   ========================================= */
+
+/* The window that hides the overflow */
+.slider-viewport {
+  overflow: hidden;
+  position: relative;
+  width: 100%;
+  padding: 10px 0;
+}
+
+/* The long track containing all slides (original + duplicates) */
+.slider-track {
+  display: flex;
+  width: max-content; /* Adjust width to fit content exactly */
+  gap: 20px;
+  /* Animation: name duration curve infinite */
+  animation: scroll 40s linear infinite; 
+}
+
+/* Pause the animation when user hovers over the track */
+.slider-track:hover {
+  animation-play-state: paused;
+}
+
+/* The individual video wrapper */
+.video-slide-item {
+  min-width: 320px;
+  width: 320px;
+  flex-shrink: 0; /* Prevent shrinking */
+}
+
+/* Keyframes for the scrolling effect */
+@keyframes scroll {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    /* Move left by 50% of the total width. 
+       Since we duplicated the list, 50% is exactly one full set of videos. 
+       This creates a seamless loop. */
+    transform: translateX(-50%);
+  }
+}
+
+/* ==================================
+   DIET & EXERCISE PAGE STYLES
+   ================================== */
+
+/* Hero Header with Background Image */
+.hero-header {
+  /* Linear gradient overlay with 0.6 opacity to ensure image visibility */
+  background: linear-gradient(rgba(255, 255, 255, 0.6), rgba(255, 255, 255, 0.6)), 
+              url('https://www.shutterstock.com/image-photo/balanced-diet-healthy-foods-plate-600nw-2447832645.jpg');
+  background-size: cover;
+  background-position: center;
+  
+  /* Increased padding to give the background more space to show */
+  padding: 80px 20px;
+  
+  border-radius: 20px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+  margin-bottom: 40px;
+  
+  /* Ensure text sits on top */
+  position: relative;
+  overflow: hidden;
+}
+
+.hero-content {
+  position: relative;
+  z-index: 2;
+  /* Make text darker to stand out against the background */
+  text-shadow: 0 1px 2px rgba(255, 255, 255, 0.8);
+}
+
+/* Ayurveda Bullet Point Style */
+.dot-orange {
+  position: relative;
+  padding-left: 20px;
+}
+
+.dot-orange::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 8px;
+  width: 8px;
+  height: 8px;
+  background-color: #DD6B20; /* Orange color */
+  border-radius: 50%;
+}
+
+/* =========================================
+   1. CARD STYLING (Clean, No Hover Lift)
+   ========================================= */
+.card {
+  background: #ffffff;
+  border-radius: 20px;
+  padding: 2rem;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08); /* Static shadow */
+  border: 1px solid #edf2f7;
+  position: relative;
+  overflow: hidden;
+}
+
+/* =========================================
+   2. DROPDOWN (ACCORDION) STYLES
+   ========================================= */
+.dropdown-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.dropdown-item {
+  border: 1px solid #E2E8F0;
+  border-radius: 12px;
+  padding: 0 15px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+  background: #fff;
+}
+
+.dropdown-item:active {
+  background-color: #F7FAFC; /* Visual feedback on click */
+}
+
+.dropdown-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px 0;
+  font-weight: 600;
+  color: #2D3748;
+}
+
+.dropdown-content {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.3s ease-out, padding 0.3s ease;
+  padding: 0;
+  color: #718096;
+  font-size: 0.9rem;
+  line-height: 1.5;
+}
+
+.dropdown-content.open {
+  max-height: 100px; /* Adjust based on content length */
+  padding-bottom: 15px;
+  border-top: 1px solid #f0f0f0;
+  margin-top: 5px;
+  padding-top: 10px;
+}
+
+/* Dot Indicators */
+.dot-indicator {
+  display: flex;
+  align-items: center;
+}
+.dot-indicator::before {
+  content: "";
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  margin-right: 10px;
+}
+.dot-green::before { background: #48BB78; }
+.dot-red::before { background: #F56565; }
+.dot-orange::before { background: #DD6B20; }
+
+/* =========================================
+   3. SLIDESHOW (EXERCISE) STYLES
+   ========================================= */
+.slideshow-container {
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.slideshow-card {
+  min-height: 300px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.slideshow-controls {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.slide-btn {
+  background: #F7FAFC;
+  border: none;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  color: #D6689C;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.2s;
+}
+
+.slide-btn:active {
+  background: #E2E8F0;
+}
+
+/* Indicators (dots at bottom) */
+.slide-indicators {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 20px;
+}
+
+.indicator {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #E2E8F0;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.indicator.active {
+  background: #D6689C;
+  width: 20px;
+  border-radius: 10px;
+}
+
+/* Slide Animation */
+.fade-in-slide {
+  animation: slideIn 0.5s ease-out forwards;
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateX(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+/* =========================================
+   4. ENTRANCE ANIMATIONS
+   ========================================= */
+.fade-in {
+  opacity: 0;
+  animation: fadeIn 0.8s ease-out forwards;
+}
+
+.fade-in-up {
+  opacity: 0;
+  animation: fadeInUp 0.8s ease-out forwards;
+  animation-delay: 0.2s; /* Slight delay */
+}
+
+@keyframes fadeIn {
+  to { opacity: 1; }
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* =========================================
+   5. SIDE IMAGE CARD LAYOUT
+   ========================================= */
+
+/* Default: Hide the image on small screens (Mobile) */
+.hidden {
+  display: none;
+}
+
+/* Image Styling */
+.card img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 12px; /* Matches rounded-xl */
+}
+
+/* Desktop View (Tablet and up) */
+@media (min-width: 768px) {
+  
+  /* Turn the card into a horizontal Flexbox */
+  .card.md\:flex {
+    display: flex;
+    flex-direction: row;
+    align-items: stretch; /* Makes image same height as content */
+  }
+
+  /* Text Container (Takes remaining space) */
+  .flex-1 {
+    flex: 1;
+    padding-right: 20px; /* Replaces pr-4 */
+  }
+
+  /* Image Container (Takes 1/3 width) */
+  .md\:block {
+    display: block !important;
+  }
+
+  .w-1\/3 {
+    width: 35%; /* Approx 1/3 width */
+    flex-shrink: 0; /* Prevents image from shrinking */
+    margin-left: 20px; /* Replaces ml-4 */
+  }
+
+  /* Ensure the image container handles the height correctly */
+  .overflow-hidden {
+    overflow: hidden;
+  }
+}
+
+/* =========================================
+   ADD TO App.css
+   ========================================= */
+
+/* 1. Ayurveda Image Animation */
+/* This makes the banner image zoom in slightly when you hover the card */
+.card img {
+  transition: transform 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+.card:hover img {
+  transform: scale(1.05);
+}
+
+/* 2. Card Container Safety */
+/* Ensures the zoomed image doesn't overflow the rounded corners */
+.card {
+  overflow: hidden; 
+  /* (Existing .card styles should remain, just ensure overflow is hidden) */
+}
+
+/* 3. Mobile Adjustments */
+/* Makes the header images slightly shorter on mobile to save screen space */
+@media (max-width: 768px) {
+  .card div[style*="height: 200px"] {
+    height: 150px !important;
+  }
+}
+
+/* ==========================================================================
+   GLOBAL PAGE ENTRANCE ANIMATIONS
+   ========================================================================== */
+
+/* 1. Define the Keyframes (The movement) */
+@keyframes fadeInUp {
+  0% {
+    opacity: 0;
+    transform: translateY(30px); /* Starts slightly lower */
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0); /* Ends in natural position */
+  }
+}
+
+/* 2. Apply to your main page wrapper */
+/* This ensures every page wrapped in 'page-spacing' triggers this on load */
+.page-spacing {
+  animation: fadeInUp 0.8s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+}
+
+/* ==========================================================================
+   OPTIONAL: STAGGERED CHILD ANIMATIONS (For a Pro Look)
+   ========================================================================== */
+/* If you want the items INSIDE the page to load one by one (cascading),
+   add this as well. It targets direct children of your page container */
+
+.page-spacing > * {
+  opacity: 0; /* Hidden initially */
+  animation: fadeInUp 0.8s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+}
+
+/* First element (usually the Hero/Title) loads immediately */
+.page-spacing > *:nth-child(1) {
+  animation-delay: 0.1s;
+}
+
+/* Second element (usually grid or content) loads slightly later */
+.page-spacing > *:nth-child(2) {
+  animation-delay: 0.2s;
+}
+
+/* Third element loads even later */
+.page-spacing > *:nth-child(3) {
+  animation-delay: 0.3s;
+}
+
+/* Fourth element... */
+.page-spacing > *:nth-child(4) {
+  animation-delay: 0.4s;
 }

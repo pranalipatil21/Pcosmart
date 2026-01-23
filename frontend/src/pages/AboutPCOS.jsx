@@ -1,9 +1,7 @@
 import React from 'react';
-// FIX: Added 'useNavigate' and removed unused 'Link'
 import { useNavigate } from 'react-router-dom'; 
-import { useAuth } from '../context/AuthContext'; // FIX: Added missing slash
-// FIX: Removed unused 'FaArrowRight'
-import { FaQuestion, FaBrain, FaHeartbeat, FaNotesMedical, FaPills, FaTimesCircle, FaCheckCircle, FaHeart } from 'react-icons/fa';
+import { useAuth } from '../context/AuthContext';
+import { FaQuestion, FaBrain, FaHeartbeat, FaNotesMedical, FaPills, FaTimesCircle, FaCheckCircle, FaDna } from 'react-icons/fa';
 
 const AboutPCOS = () => {
   const navigate = useNavigate();
@@ -18,216 +16,176 @@ const AboutPCOS = () => {
   };
 
   return (
-    <div className="container page-spacing" style={{ maxWidth: '1000px', paddingBottom: '80px' }}>
+    <div className="container page-spacing" style={{ maxWidth: '1200px', paddingBottom: '80px' }}>
       
-      {/* 1. Header Section */}
+      {/* 1. HERO SECTION WITH BACKGROUND IMAGE */}
       <div className="about-header-section">
-        <span className="badge">Education & Awareness</span>
-        <h1 style={{ fontSize: '3rem', margin: '20px 0' }}>
-          Understanding <span style={{ color: '#D6689C' }}>PCOS</span>
-        </h1>
-        <p style={{ color: '#718096', maxWidth: '700px', margin: '0 auto', fontSize: '1.1rem' }}>
-          Learn about Polycystic Ovary Syndrome, its causes, symptoms, and treatment options. 
-          Knowledge is the first step towards managing your health.
-        </p>
-      </div>
-
-      {/* 2. What is PCOS Card */}
-      <div className="info-card">
-        <div style={{ display: 'flex', gap: '20px', alignItems: 'flex-start' }}>
-          <div className="icon-square" style={{ background: '#D6689C', minWidth: '50px' }}>
-            <FaQuestion />
-          </div>
-          <div>
-            <h2 style={{ marginBottom: '15px', fontSize: '1.5rem' }}>What is PCOS?</h2>
-            <p style={{ color: '#4A5568', lineHeight: '1.7' }}>
-              Polycystic Ovary Syndrome (PCOS) is a chronic hormonal and metabolic disorder that affects women during their reproductive years (typically ages 15–44). It is characterized by an imbalance of reproductive hormones, which can interfere with normal ovulation. As a result, the ovaries may not release eggs regularly and may contain multiple small, fluid-filled sacs called follicles (often mistakenly referred to as cysts).
-              PCOS is one of the leading causes of infertility, but it also affects overall health, including metabolism, mental well-being, and cardiovascular health. The condition varies widely—some women have severe symptoms, while others may have mild or no noticeable symptoms.
-            </p>
-          </div>
+        <div className="hero-overlay">
+          <span className="badge">Education & Awareness</span>
+          <h1 style={{ fontSize: '3.5rem', margin: '20px 0', fontWeight: 'bold' }}>
+            Understanding PCOS
+          </h1>
+          <p style={{ maxWidth: '700px', margin: '0 auto', fontSize: '1.2rem', lineHeight: '1.8' }}>
+            Empower yourself with knowledge. Learn about causes, symptoms, and how to manage Polycystic Ovary Syndrome effectively.
+          </p>
         </div>
       </div>
 
-      {/* 3. Causes Card */}
+      {/* 2. WHAT IS PCOS (Image Right) */}
       <div className="info-card">
-        <div style={{ display: 'flex', gap: '20px', alignItems: 'flex-start' }}>
-          <div className="icon-square" style={{ background: '#C068D6', minWidth: '50px' }}>
-            <FaBrain />
-          </div>
-          <div>
-            <h2 style={{ marginBottom: '15px', fontSize: '1.5rem' }}>Causes of PCOS</h2>
-            <p style={{ color: '#4A5568', lineHeight: '1.7' }}>
-              The exact cause of PCOS is not fully understood, but research suggests it results from a combination of genetic, hormonal, and environmental factors:<br></br>
-              <b>1. Insulin resistance:</b> Many women with PCOS have insulin resistance, meaning their bodies do not use insulin effectively. This leads to higher insulin levels, which stimulate the ovaries to produce excess androgens.<br></br>
-              <b>2. Excess androgen production:</b> Elevated levels of male hormones (such as testosterone) disrupt ovulation and cause symptoms like acne and excessive hair growth.<br></br>
-              <b>3. Low-grade inflammation:</b> Women with PCOS often have chronic low-level inflammation, which may trigger androgen production.<br></br>
-              <b>4. Genetics:</b> PCOS tends to run in families, suggesting a hereditary component.<br></br>
-              <b>5. Lifestyle factors:</b> Poor diet, physical inactivity, and weight gain can worsen symptoms, though PCOS can occur in women of all body types.<br></br>
-              Early diagnosis and management can significantly reduce the risk of long-term complications.
+        <div className="info-card-grid">
+          <div className="info-card-content">
+            <div className="icon-square" style={{ background: '#D6689C' }}>
+              <FaQuestion />
+            </div>
+            <h2 style={{ marginBottom: '20px', fontSize: '2rem', color: '#2D3748' }}>What is PCOS?</h2>
+            <p style={{ color: '#4A5568', lineHeight: '1.8', fontSize: '1.05rem' }}>
+              Polycystic Ovary Syndrome (PCOS) is a chronic hormonal and metabolic disorder affecting women of reproductive age. It is characterized by an imbalance of reproductive hormones, which can interfere with normal ovulation.
+              <br /><br />
+              The ovaries may develop numerous small fluid-filled sacs called follicles. While not dangerous, they indicate that ovulation is not happening regularly. PCOS affects metabolism, mental health, and heart health, making early management crucial.
             </p>
           </div>
+          <img 
+            src="https://defensetalks.com/wp-content/uploads/2021/10/questioning-woman.jpg" 
+            alt="Ovarian follicles illustration" 
+            className="info-card-image"
+          />
         </div>
       </div>
 
-      {/* 4. Symptoms Card */}
+      {/* 3. CAUSES (Image Left) - Tightened layout to remove empty space */}
       <div className="info-card">
-        <div style={{ display: 'flex', gap: '20px', alignItems: 'flex-start' }}>
-          <div className="icon-square" style={{ background: '#C068D6', minWidth: '50px' }}>
-            <FaNotesMedical />
-          </div>
-          <div style={{ width: '100%' }}>
-            <h2 style={{ marginBottom: '20px', fontSize: '1.5rem' }}>Common Symptoms</h2>
-            <div className="check-list-vertical">
-              {[
-                "Irregular menstrual cycles: Infrequent, prolonged, or absent periods due to lack of regular ovulation",
-                "Infertility: Difficulty conceiving because ovulation may not occur consistently",
-                "Hirsutism: Excess hair growth on the face, chest, abdomen, or back",
-                "Weight gain: Especially around the abdomen, linked to insulin resistance",
-                "Hair thinning or hair loss: Male-pattern hair thinning on the scalp",
-                "Acne and oily skin: Caused by increased androgen levels",
-                "Skin darkening (acanthosis nigricans): Dark, thickened patches of skin, commonly on the neck, underarms, or groin"
-              ].map((item, index) => (
-                <div key={index} className="check-item-red">
-                  <FaCheckCircle className="icon-circle-outline" />
-                  <span>{item}</span>
-                </div>
-              ))}
+        <div className="info-card-grid">
+          <img 
+            src="https://southendfertilityclinic.com.ng/wp-content/uploads/2018/01/PCOS.png" 
+            alt="Doctor consultation" 
+            className="info-card-image"
+            style={{ order: window.innerWidth < 900 ? -1 : 0 }} 
+          />
+          <div className="info-card-content">
+            <div className="icon-square" style={{ background: '#805AD5' }}>
+              <FaDna />
+            </div>
+            <h2 style={{ marginBottom: '20px', fontSize: '2rem', color: '#2D3748' }}>Root Causes</h2>
+            <p style={{ color: '#4A5568', lineHeight: '1.8', marginBottom: '20px' }}>
+              The exact cause is unknown, but several factors play a key role:
+            </p>
+            {/* Added a background container to fill 'empty' space */}
+            <div className="causes-compact-container">
+              <div className="check-item-red"><FaBrain color="#805AD5"/> <div><strong>Insulin Resistance:</strong> High insulin levels trigger androgen production.</div></div>
+              <div className="check-item-red"><FaHeartbeat color="#805AD5"/> <div><strong>Inflammation:</strong> Chronic low-grade inflammation stimulates ovaries to produce testosterone.</div></div>
+              <div className="check-item-red"><FaDna color="#805AD5"/> <div><strong>Genetics:</strong> PCOS often runs in families.</div></div>
             </div>
           </div>
         </div>
       </div>
 
-      {/* 5. Health Risks Card */}
+      {/* 4. SYMPTOMS (Image Left, Text Right) */}
       <div className="info-card">
-        <div style={{ display: 'flex', gap: '20px', alignItems: 'flex-start' }}>
-          <div className="icon-square" style={{ background: '#D6689C', minWidth: '50px' }}>
-            <FaHeartbeat />
-          </div>
-          <div style={{ width: '100%' }}>
-            <h2 style={{ marginBottom: '20px', fontSize: '1.5rem' }}>Health Risks</h2>
-            <div className="check-list-vertical">
-              {[
-                "Type 2 diabetes or prediabetes: Due to insulin resistance",
-                "High blood pressure (hypertension): Raises cardiovascular risk",
-                "Abnormal cholesterol levels: Increased LDL (“bad”) cholesterol and decreased HDL (“good”) cholesterol",
-                "Heart disease and stroke: Higher long-term cardiovascular risk",
-                "Endometrial cancer: Irregular or absent periods can cause thickening of the uterine lining",
-                "Mental health disorders: Increased risk of depression, anxiety, and eating disorders",
-                "Sleep apnea: Particularly in women who are overweight or obese"
-              ].map((item, index) => (
-                <div key={index} className="check-item-red">
-                  <FaCheckCircle className="icon-circle-outline" />
-                  <span>{item}</span>
-                </div>
-              ))}
+        <div className="info-card-grid">
+          <img 
+            src="https://cdn.sanity.io/images/iy559jeo/production/0a0dff27ebd31c93f92705481e4f3f446398ffef-4896x3264.jpg?w=3840&q=75&fit=clip&auto=format" 
+            alt="PCOS symptoms representation" 
+            className="info-card-image"
+            style={{ order: window.innerWidth < 900 ? -1 : 0 }} 
+          />
+          <div className="info-card-content">
+            <div className="icon-square" style={{ background: '#D6689C' }}>
+              <FaNotesMedical />
+            </div>
+            <h2 style={{ marginBottom: '20px', fontSize: '2.2rem', color: '#2D3748' }}>Common Symptoms</h2>
+            
+            <div className="symptoms-split-grid">
+              <div className="check-list-vertical">
+                <div className="check-item-red"><FaCheckCircle className="icon-circle-outline" /> Irregular or absent menstrual cycles</div>
+                <div className="check-item-red"><FaCheckCircle className="icon-circle-outline" /> Difficulty conceiving (Infertility)</div>
+                <div className="check-item-red"><FaCheckCircle className="icon-circle-outline" /> Excess hair growth (Hirsutism)</div>
+                <div className="check-item-red"><FaCheckCircle className="icon-circle-outline" /> Unexplained weight gain</div>
+              </div>
+              <div className="check-list-vertical">
+                <div className="check-item-red"><FaCheckCircle className="icon-circle-outline" /> Thinning hair on the scalp</div>
+                <div className="check-item-red"><FaCheckCircle className="icon-circle-outline" /> Severe acne or oily skin</div>
+                <div className="check-item-red"><FaCheckCircle className="icon-circle-outline" /> Darkening of skin (Acanthosis)</div>
+                <div className="check-item-red"><FaCheckCircle className="icon-circle-outline" /> Fatigue and mood swings</div>
+              </div>
             </div>
           </div>
         </div>
       </div>
 
-      {/* 6. Treatment Options Card */}
+      {/* 5. TREATMENT (Image Right) */}
       <div className="info-card">
-        <div style={{ display: 'flex', gap: '20px', alignItems: 'flex-start' }}>
-          <div className="icon-square" style={{ background: '#C068D6', minWidth: '50px' }}>
-            <FaPills />
-          </div>
-          <div>
-            <h2 style={{ marginBottom: '15px', fontSize: '1.5rem' }}>Treatment Options</h2>
-            <p style={{ color: '#4A5568', lineHeight: '1.7', marginBottom: '20px' }}>
-              There is no cure for PCOS, but treatments are highly effective at managing symptoms and preventing complications. Treatment plans are individualized based on symptoms and reproductive goals.
+        <div className="info-card-grid">
+          <div className="info-card-content">
+            <div className="icon-square" style={{ background: '#38A169' }}>
+              <FaPills />
+            </div>
+            <h2 style={{ marginBottom: '20px', fontSize: '2rem', color: '#2D3748' }}>Treatment Options</h2>
+            <p style={{ color: '#4A5568', lineHeight: '1.8', marginBottom: '20px' }}>
+              While there is no cure, symptoms can be managed effectively through lifestyle changes and medical treatment.
             </p>
             <div className="check-list-vertical">
-              {[
-                "Lifestyle modifications (diet and exercise)",
-                "Birth control pills to regulate periods",
-                "Metformin to improve insulin resistance",
-                "Fertility treatments if trying to conceive",
-                "Anti-androgen medications",
-                "Hair removal treatments"
-              ].map((item, index) => (
-                <div key={index} className="check-item-red">
-                  <FaCheckCircle className="icon-circle-outline" />
-                  <span>{item}</span>
-                </div>
-              ))}
+              <div className="check-item-red"><FaCheckCircle color="#38A169"/> Lifestyle: Diet (Low GI) and regular exercise</div>
+              <div className="check-item-red"><FaCheckCircle color="#38A169"/> Medications: Birth control or Metformin</div>
+              <div className="check-item-red"><FaCheckCircle color="#38A169"/> Fertility treatments if trying to conceive</div>
+              <div className="check-item-red"><FaCheckCircle color="#38A169"/> Supplements: Inositol, Vitamin D, Omega-3</div>
             </div>
           </div>
+          <img 
+            src="https://medlineplus.gov/images/WomensHealthCheckup_Share.jpg" 
+            alt="Healthy Lifestyle" 
+            className="info-card-image"
+          />
         </div>
       </div>
 
-      {/* 7. Myths vs Facts Section */}
-      <div className="section-title" style={{ marginTop: '60px' }}>
+      {/* 6. MYTHS VS FACTS SECTION */}
+      <div className="section-title" style={{ marginTop: '80px', marginBottom: '50px' }}>
         <h2>Myths vs <span style={{ color: '#D6689C' }}>Facts</span></h2>
-        <p style={{ color: '#718096' }}>Let's clear up some common misconceptions about PCOS</p>
+        <p style={{ color: '#718096' }}>Debunking common misconceptions to help you understand the reality.</p>
       </div>
 
       <div className="myth-fact-grid-wrapper">
         <div className="myth-fact-container">
           <div className="myth-card">
             <div className="myth-label"><FaTimesCircle /> Myth</div>
-            <p className="myth-fact-text">PCOS only affects overweight women</p>
+            <p className="myth-fact-text">PCOS only affects overweight women.</p>
           </div>
           <div className="fact-card">
             <div className="fact-label"><FaCheckCircle /> Fact</div>
-            <p className="myth-fact-text">PCOS affects women of all body types. While weight can worsen symptoms, lean women can also have PCOS.</p>
+            <p className="myth-fact-text">PCOS affects women of all sizes. "Lean PCOS" is common, where metabolic issues still occur.</p>
           </div>
         </div>
 
         <div className="myth-fact-container">
           <div className="myth-card">
             <div className="myth-label"><FaTimesCircle /> Myth</div>
-            <p className="myth-fact-text">You can't get pregnant with PCOS</p>
+            <p className="myth-fact-text">You can't get pregnant with PCOS.</p>
           </div>
           <div className="fact-card">
             <div className="fact-label"><FaCheckCircle /> Fact</div>
-            <p className="myth-fact-text">With proper treatment, many women with PCOS can conceive naturally or with fertility assistance.</p>
+            <p className="myth-fact-text">Most women with PCOS can conceive naturally or with minor fertility assistance.</p>
           </div>
         </div>
 
         <div className="myth-fact-container">
           <div className="myth-card">
             <div className="myth-label"><FaTimesCircle /> Myth</div>
-            <p className="myth-fact-text">PCOS symptoms are the same for everyone</p>
+            <p className="myth-fact-text">PCOS is just an ovary problem.</p>
           </div>
           <div className="fact-card">
             <div className="fact-label"><FaCheckCircle /> Fact</div>
-            <p className="myth-fact-text">PCOS manifests differently in each person. Some may have all symptoms, others only a few.</p>
+            <p className="myth-fact-text">PCOS is a metabolic disorder that affects the whole body, including heart and mental health.</p>
           </div>
         </div>
-        
-         <div className="myth-fact-container">
-          <div className="myth-card">
-            <div className="myth-label"><FaTimesCircle /> Myth</div>
-            <p className="myth-fact-text">Birth control cures PCOS</p>
-          </div>
-          <div className="fact-card">
-            <div className="fact-label"><FaCheckCircle /> Fact</div>
-            <p className="myth-fact-text">Birth control manages symptoms but doesn't cure PCOS. Symptoms may return after stopping.</p>
-          </div>
-        </div>
-        
-         <div className="myth-fact-container">
-          <div className="myth-card">
-            <div className="myth-label"><FaTimesCircle /> Myth</div>
-            <p className="myth-fact-text">PCOS only affects reproductive health</p>
-          </div>
-          <div className="fact-card">
-            <div className="fact-label"><FaCheckCircle /> Fact</div>
-            <p className="myth-fact-text">PCOS is a metabolic disorder affecting heart health, mental health, and more.</p>
-          </div>
-        </div>
-
       </div>
 
       {/* 8. CTA Card */}
-      <div className="info-card" style={{ textAlign: 'center', marginTop: '40px', border: 'none', boxShadow: '0 10px 30px rgba(0,0,0,0.08)' }}>
-        <FaHeart style={{ fontSize: '3rem', color: '#D6689C', marginBottom: '20px' }} />
-        <h2 style={{ fontSize: '2rem', marginBottom: '15px' }}>Think You Might Have PCOS?</h2>
-        <p style={{ color: '#718096', maxWidth: '600px', margin: '0 auto 30px auto' }}>
-          Take our AI-powered screening test to get personalized insights about your symptoms. 
-          Early detection can help you manage PCOS more effectively.
+      <div className="info-card cta-card">
+        <h2 style={{ fontSize: '2.2rem', marginBottom: '15px' }}>Think You Might Have PCOS?</h2>
+        <p style={{ color: '#718096', maxWidth: '600px', margin: '0 auto 30px auto', fontSize: '1.1rem' }}>
+          Early detection is the key to managing your health. Take our AI-powered screening test today.
         </p>
-        
         <button onClick={handleAssessmentClick} className="btn-assessment">
           Start Your Assessment
         </button>

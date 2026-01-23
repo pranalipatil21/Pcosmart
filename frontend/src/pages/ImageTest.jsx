@@ -91,7 +91,8 @@ const ImageTest = () => {
           Upload your ovarian ultrasound image for AI-powered PCOS probability analysis.
         </p>
       </div>
-
+      <br></br>
+      
       <div className="card">
         {error && (
           <div
