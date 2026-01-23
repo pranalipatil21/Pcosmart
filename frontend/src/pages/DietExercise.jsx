@@ -116,20 +116,51 @@ const DietExercise = () => {
     setExerciseSlide((prev) => (prev === 0 ? exerciseSlides.length - 1 : prev - 1));
   };
 
-  const handleChatSubmit = async (e) => {
+const handleChatSubmit = async (e) => {
     e.preventDefault();
     if (!chatInput.trim()) return;
+
+    // 1. Create the user message object
     const userMsg = { role: "user", parts: [{ text: chatInput }] };
+    
+    // 2. Update UI immediately
     setChatHistory(prev => [...prev, userMsg]);
     setChatInput("");
     setIsTyping(true);
-    // Simulate API call or real fetch here
-    setTimeout(() => {
-      setChatHistory(prev => [...prev, { role: "model", parts: [{ text: "This is a demo response from Cora." }] }]);
-      setIsTyping(false);
-    }, 1000);
-  };
 
+    try {
+      // 3. Filter History: Remove the first "Hi I'm Cora" message because 
+      // Gemini history MUST start with a 'user' message, not 'model'.
+      // We also verify we aren't sending the message we just typed (it goes in 'message' body)
+      const historyForBackend = chatHistory.slice(1); 
+
+      // 4. Send Request
+      const response = await fetch('http://localhost:5000/api/auth/pcos-chatbot', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ 
+          message: userMsg.parts[0].text, // Send the text directly
+          history: historyForBackend 
+        })
+      });
+      
+      const data = await response.json();
+
+      if (response.ok) {
+        setChatHistory(prev => [...prev, { role: "model", parts: [{ text: data.text }] }]);
+      } else {
+        throw new Error(data.error || "Server error");
+      }
+    } catch (err) {
+      console.error("Chat Error:", err);
+      setChatHistory(prev => [...prev, { 
+        role: "model", 
+        parts: [{ text: "I'm having a little trouble connecting. Please check your internet or try again." }] 
+      }]);
+    } finally {
+      setIsTyping(false);
+    }
+  };
   return (
     <div className="container page-spacing">
       
@@ -363,7 +394,8 @@ const DietExercise = () => {
         </div>
       </div>
 
-      {/* Chatbot (Kept as is) */}
+      
+ {/* Chatbot (Kept as is) */}
       <div className={`chat-bot-container ${isChatOpen ? 'open' : ''}`}>
         {!isChatOpen ? (
           <button className="chat-toggle-btn" onClick={() => setIsChatOpen(true)}>
@@ -389,8 +421,7 @@ const DietExercise = () => {
         )}
       </div>
 
-    </div>
-  );
+    </div>  );
 };
 
 export default DietExercise;
