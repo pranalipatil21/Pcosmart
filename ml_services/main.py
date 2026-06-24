@@ -2,25 +2,15 @@ import os, json
 import numpy as np
 import pandas as pd
 from joblib import load
-import shap
 import google.generativeai as genai
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from dotenv import load_dotenv
 
 #image 
-import torch
-import torch.nn as nn
-import torch.nn.functional as F
-# pyrefly: ignore [missing-import]
-from torchvision import models, transforms
 from PIL import Image
 import io
 from fastapi import UploadFile, File, HTTPException, Form
-
-# Limit PyTorch threads to reduce memory overhead
-torch.set_num_threads(1)
-torch.set_num_interop_threads(1)
 
 load_dotenv()
 
@@ -83,44 +73,6 @@ FUSION_FEATURE_KEYS = [
 ]
 
 
-class LateFusionModel(nn.Module):
-    def __init__(self, num_clinical_features: int):
-        super().__init__()
-
-        self.resnet = models.resnet18(weights=None)
-        self.resnet.fc = nn.Identity()  # output 512
-
-        self.clinical_net = nn.Sequential(
-            nn.Linear(num_clinical_features, 32),
-            nn.ReLU(),
-            nn.Dropout(0.3),
-            nn.Linear(32, 16),
-            nn.ReLU(),
-        )
-
-        self.fusion_net = nn.Sequential(
-            nn.Linear(512 + 16, 64),
-            nn.ReLU(),
-            nn.Dropout(0.3),
-            nn.Linear(64, 2),
-        )
-
-    def forward(self, image, clinical_data):
-        x_image = self.resnet(image)
-        x_clinical = self.clinical_net(clinical_data)
-        combined = torch.cat((x_image, x_clinical), dim=1)
-        return self.fusion_net(combined)
-    
-
-
-def build_fusion_transform():
-    return transforms.Compose([
-        transforms.Resize((224, 224)),
-        transforms.ToTensor(),
-        transforms.Normalize([0.485, 0.456, 0.406],
-                             [0.229, 0.224, 0.225]),
-    ])
-
 
 # ---- Helpers ----
 def risk_level(p: float) -> str:
@@ -142,6 +94,7 @@ def clean_feat_name(name: str) -> str:
     return name
 
 def make_shap_explainer(pipeline, background_df: pd.DataFrame):
+    import shap
     preprocess = pipeline.named_steps["preprocess"]
     model = pipeline.named_steps["clf"]
 
@@ -224,12 +177,6 @@ Write 5-8 lines:
         )
 
 
-def build_resnet18_2class():
-    m = models.resnet18(weights=None)  # no download
-    num_ftrs = m.fc.in_features
-    m.fc = nn.Linear(num_ftrs, 2)
-    return m
-
 
 def gemini_narration_image(probability: float) -> str:
     lvl = risk_level(probability)
@@ -266,6 +213,57 @@ def lazy_load_image_models():
         return
 
     print("Lazy loading PyTorch models...")
+    import torch
+    import torch.nn as nn
+    import torch.nn.functional as F
+    from torchvision import models, transforms
+
+    # Limit PyTorch thread count to minimize RAM overhead
+    torch.set_num_threads(1)
+    torch.set_num_interop_threads(1)
+
+    class LateFusionModel(nn.Module):
+        def __init__(self, num_clinical_features: int):
+            super().__init__()
+
+            self.resnet = models.resnet18(weights=None)
+            self.resnet.fc = nn.Identity()  # output 512
+
+            self.clinical_net = nn.Sequential(
+                nn.Linear(num_clinical_features, 32),
+                nn.ReLU(),
+                nn.Dropout(0.3),
+                nn.Linear(32, 16),
+                nn.ReLU(),
+            )
+
+            self.fusion_net = nn.Sequential(
+                nn.Linear(512 + 16, 64),
+                nn.ReLU(),
+                nn.Dropout(0.3),
+                nn.Linear(64, 2),
+            )
+
+        def forward(self, image, clinical_data):
+            x_image = self.resnet(image)
+            x_clinical = self.clinical_net(clinical_data)
+            combined = torch.cat((x_image, x_clinical), dim=1)
+            return self.fusion_net(combined)
+
+    def build_resnet18_2class():
+        m = models.resnet18(weights=None)  # no download
+        num_ftrs = m.fc.in_features
+        m.fc = nn.Linear(num_ftrs, 2)
+        return m
+
+    def build_fusion_transform():
+        return transforms.Compose([
+            transforms.Resize((224, 224)),
+            transforms.ToTensor(),
+            transforms.Normalize([0.485, 0.456, 0.406],
+                                 [0.229, 0.224, 0.225]),
+        ])
+
     pt_path = os.path.join(ART_DIR, "pcos_resnet_model.pt")
     if not os.path.exists(pt_path):
         raise RuntimeError(f"pcos_resnet_model.pt not found at: {pt_path}")
@@ -298,6 +296,7 @@ def lazy_load_image_models():
     fusion_model.load_state_dict(state)
     fusion_model.eval()
     print("PyTorch models loaded successfully!")
+
 
 
 # ---- Startup ----
