@@ -11,6 +11,6 @@ google-generativeai
 torch==2.9.1+cpu
 torchvision==0.24.1+cpu
 pillow
-scikit-learn
+scikit-learn==1.6.1
 xgboost
 
