@@ -18,6 +18,10 @@ from PIL import Image
 import io
 from fastapi import UploadFile, File, HTTPException, Form
 
+# Limit PyTorch threads to reduce memory overhead
+torch.set_num_threads(1)
+torch.set_num_interop_threads(1)
+
 load_dotenv()
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
@@ -254,15 +258,55 @@ Write 5-8 lines:
             "We strongly advise consulting a medical professional or fertility specialist for clinical confirmation and guidance."
         )
 
+def lazy_load_image_models():
+    global image_torch_model, image_transform
+    global fusion_model, fusion_scaler, fusion_transform
+
+    if image_torch_model is not None:
+        return
+
+    print("Lazy loading PyTorch models...")
+    pt_path = os.path.join(ART_DIR, "pcos_resnet_model.pt")
+    if not os.path.exists(pt_path):
+        raise RuntimeError(f"pcos_resnet_model.pt not found at: {pt_path}")
+
+    image_torch_model = build_resnet18_2class().to(IMAGE_DEVICE)
+    state = torch.load(pt_path, map_location=IMAGE_DEVICE)
+    image_torch_model.load_state_dict(state)
+    image_torch_model.eval()
+
+    image_transform = transforms.Compose([
+        transforms.Resize((224, 224)),
+        transforms.ToTensor(),
+        transforms.Normalize([0.485, 0.456, 0.406], [0.229, 0.224, 0.225]),
+    ])
+
+    fusion_transform = build_fusion_transform()
+
+    fusion_path = os.path.join(ART_DIR, "pcos_fusion_model.pt")
+    scaler_path = os.path.join(ART_DIR, "fusion_scaler.joblib")
+
+    if not os.path.exists(fusion_path):
+        raise RuntimeError(f"pcos_fusion_model.pt not found: {fusion_path}")
+    if not os.path.exists(scaler_path):
+        raise RuntimeError(f"fusion_scaler.joblib not found: {scaler_path}")
+
+    fusion_scaler = load(scaler_path)
+
+    fusion_model = LateFusionModel(num_clinical_features=len(FUSION_FEATURE_KEYS)).to(FUSION_DEVICE)
+    state = torch.load(fusion_path, map_location=FUSION_DEVICE)
+    fusion_model.load_state_dict(state)
+    fusion_model.eval()
+    print("PyTorch models loaded successfully!")
+
+
 # ---- Startup ----
 @app.on_event("startup")
 def startup():
     global simple_pipe, clinical_pipe
     global simple_schema, clinical_schema, risk_thresholds
     global simple_explainer, clinical_explainer, simple_feature_names, clinical_feature_names
-    global image_torch_model, image_transform
     
-
     # Configure Gemini
     api_key = os.getenv("GEMINI_API_KEY")
     if not api_key:
@@ -290,40 +334,6 @@ def startup():
     # Build explainers
     simple_explainer, simple_feature_names = make_shap_explainer(simple_pipe, simple_bg)
     clinical_explainer, clinical_feature_names = make_shap_explainer(clinical_pipe, clinical_bg)
-
-    pt_path = os.path.join(ART_DIR, "pcos_resnet_model.pt")
-    if not os.path.exists(pt_path):
-        raise RuntimeError(f"pcos_resnet_model.pt not found at: {pt_path}")
-
-    image_torch_model = build_resnet18_2class().to(IMAGE_DEVICE)
-    state = torch.load(pt_path, map_location=IMAGE_DEVICE)
-    image_torch_model.load_state_dict(state)
-    image_torch_model.eval()
-
-    image_transform = transforms.Compose([
-        transforms.Resize((224, 224)),
-        transforms.ToTensor(),
-        transforms.Normalize([0.485, 0.456, 0.406], [0.229, 0.224, 0.225]),
-    ])
-
-    global fusion_model, fusion_scaler, fusion_transform
-
-    fusion_transform = build_fusion_transform()
-
-    fusion_path = os.path.join(ART_DIR, "pcos_fusion_model.pt")
-    scaler_path = os.path.join(ART_DIR, "fusion_scaler.joblib")
-
-    if not os.path.exists(fusion_path):
-        raise RuntimeError(f"pcos_fusion_model.pt not found: {fusion_path}")
-    if not os.path.exists(scaler_path):
-        raise RuntimeError(f"fusion_scaler.joblib not found: {scaler_path}")
-
-    fusion_scaler = load(scaler_path)
-
-    fusion_model = LateFusionModel(num_clinical_features=len(FUSION_FEATURE_KEYS)).to(FUSION_DEVICE)
-    state = torch.load(fusion_path, map_location=FUSION_DEVICE)
-    fusion_model.load_state_dict(state)
-    fusion_model.eval()
 
 
 def risk_level(p: float) -> str:
@@ -370,6 +380,7 @@ def predict_clinical(payload: dict):
 
 @app.post("/predict/image")
 async def predict_image(image: UploadFile = File(...)):
+    lazy_load_image_models()
     if image_torch_model is None or image_transform is None:
         raise HTTPException(status_code=500, detail="Image model not loaded")
 
@@ -404,6 +415,7 @@ async def predict_combined(
     image: UploadFile = File(...),
     clinical: str = Form(...),
 ):
+    lazy_load_image_models()
     if fusion_model is None or fusion_scaler is None or fusion_transform is None:
         raise HTTPException(status_code=500, detail="Fusion model not loaded")
 
