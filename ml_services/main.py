@@ -19,6 +19,9 @@ ART_DIR = os.path.join(BASE_DIR, "artifacts")
 app = FastAPI(title="PCOSmart Text ML Service", version="1.0")
 
 
+# image models placeholders
+torch = None
+F = None
 image_torch_model = None
 image_transform = None
 IMAGE_DEVICE = "cpu"   # keep CPU for Windows reliability
@@ -208,15 +211,19 @@ Write 5-8 lines:
 def lazy_load_image_models():
     global image_torch_model, image_transform
     global fusion_model, fusion_scaler, fusion_transform
+    global torch, F
 
     if image_torch_model is not None:
         return
 
     print("Lazy loading PyTorch models...")
-    import torch
+    import torch as _torch
     import torch.nn as nn
-    import torch.nn.functional as F
+    import torch.nn.functional as _F
     from torchvision import models, transforms
+
+    torch = _torch
+    F = _F
 
     # Limit PyTorch thread count to minimize RAM overhead
     torch.set_num_threads(1)

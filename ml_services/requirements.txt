@@ -1,3 +1,4 @@
+--extra-index-url https://download.pytorch.org/whl/cpu
 fastapi
 uvicorn[standard]
 python-dotenv
@@ -7,8 +8,9 @@ pandas
 joblib
 shap
 google-generativeai
-torch
-torchvision
+torch==2.9.1+cpu
+torchvision==0.24.1+cpu
 pillow
 scikit-learn
 xgboost
+
