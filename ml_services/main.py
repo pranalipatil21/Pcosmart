@@ -208,68 +208,32 @@ Write 5-8 lines:
             "We strongly advise consulting a medical professional or fertility specialist for clinical confirmation and guidance."
         )
 
-def lazy_load_image_models():
-    global image_torch_model, image_transform
-    global fusion_model, fusion_scaler, fusion_transform
+def lazy_load_base_torch():
     global torch, F
-
-    if image_torch_model is not None:
+    if torch is not None:
         return
-
-    print("Lazy loading PyTorch models...")
+    print("Loading PyTorch modules...")
     import torch as _torch
-    import torch.nn as nn
     import torch.nn.functional as _F
-    from torchvision import models, transforms
-
     torch = _torch
     F = _F
-
-    # Limit PyTorch thread count to minimize RAM overhead
     torch.set_num_threads(1)
     torch.set_num_interop_threads(1)
 
-    class LateFusionModel(nn.Module):
-        def __init__(self, num_clinical_features: int):
-            super().__init__()
-
-            self.resnet = models.resnet18(weights=None)
-            self.resnet.fc = nn.Identity()  # output 512
-
-            self.clinical_net = nn.Sequential(
-                nn.Linear(num_clinical_features, 32),
-                nn.ReLU(),
-                nn.Dropout(0.3),
-                nn.Linear(32, 16),
-                nn.ReLU(),
-            )
-
-            self.fusion_net = nn.Sequential(
-                nn.Linear(512 + 16, 64),
-                nn.ReLU(),
-                nn.Dropout(0.3),
-                nn.Linear(64, 2),
-            )
-
-        def forward(self, image, clinical_data):
-            x_image = self.resnet(image)
-            x_clinical = self.clinical_net(clinical_data)
-            combined = torch.cat((x_image, x_clinical), dim=1)
-            return self.fusion_net(combined)
-
+def lazy_load_image_model():
+    global image_torch_model, image_transform
+    if image_torch_model is not None:
+        return
+    lazy_load_base_torch()
+    import torch.nn as nn
+    from torchvision import models, transforms
+    
+    print("Loading ResNet18 Image Model...")
     def build_resnet18_2class():
-        m = models.resnet18(weights=None)  # no download
+        m = models.resnet18(weights=None)
         num_ftrs = m.fc.in_features
         m.fc = nn.Linear(num_ftrs, 2)
         return m
-
-    def build_fusion_transform():
-        return transforms.Compose([
-            transforms.Resize((224, 224)),
-            transforms.ToTensor(),
-            transforms.Normalize([0.485, 0.456, 0.406],
-                                 [0.229, 0.224, 0.225]),
-        ])
 
     pt_path = os.path.join(ART_DIR, "pcos_resnet_model.pt")
     if not os.path.exists(pt_path):
@@ -285,8 +249,52 @@ def lazy_load_image_models():
         transforms.ToTensor(),
         transforms.Normalize([0.485, 0.456, 0.406], [0.229, 0.224, 0.225]),
     ])
+    
+    del state
+    import gc
+    gc.collect()
+    print("ResNet18 Image Model loaded successfully!")
 
-    fusion_transform = build_fusion_transform()
+def lazy_load_fusion_model():
+    global fusion_model, fusion_scaler, fusion_transform
+    if fusion_model is not None:
+        return
+    lazy_load_base_torch()
+    import torch.nn as nn
+    from torchvision import models, transforms
+
+    print("Loading Late Fusion Model...")
+    class LateFusionModel(nn.Module):
+        def __init__(self, num_clinical_features: int):
+            super().__init__()
+            self.resnet = models.resnet18(weights=None)
+            self.resnet.fc = nn.Identity()
+            self.clinical_net = nn.Sequential(
+                nn.Linear(num_clinical_features, 32),
+                nn.ReLU(),
+                nn.Dropout(0.3),
+                nn.Linear(32, 16),
+                nn.ReLU(),
+            )
+            self.fusion_net = nn.Sequential(
+                nn.Linear(512 + 16, 64),
+                nn.ReLU(),
+                nn.Dropout(0.3),
+                nn.Linear(64, 2),
+            )
+        def forward(self, image, clinical_data):
+            x_image = self.resnet(image)
+            x_clinical = self.clinical_net(clinical_data)
+            combined = torch.cat((x_image, x_clinical), dim=1)
+            return self.fusion_net(combined)
+
+    def build_fusion_transform():
+        return transforms.Compose([
+            transforms.Resize((224, 224)),
+            transforms.ToTensor(),
+            transforms.Normalize([0.485, 0.456, 0.406],
+                                 [0.229, 0.224, 0.225]),
+        ])
 
     fusion_path = os.path.join(ART_DIR, "pcos_fusion_model.pt")
     scaler_path = os.path.join(ART_DIR, "fusion_scaler.joblib")
@@ -297,12 +305,17 @@ def lazy_load_image_models():
         raise RuntimeError(f"fusion_scaler.joblib not found: {scaler_path}")
 
     fusion_scaler = load(scaler_path)
+    fusion_transform = build_fusion_transform()
 
     fusion_model = LateFusionModel(num_clinical_features=len(FUSION_FEATURE_KEYS)).to(FUSION_DEVICE)
     state = torch.load(fusion_path, map_location=FUSION_DEVICE)
     fusion_model.load_state_dict(state)
     fusion_model.eval()
-    print("PyTorch models loaded successfully!")
+    
+    del state
+    import gc
+    gc.collect()
+    print("Late Fusion Model loaded successfully!")
 
 
 
@@ -386,7 +399,7 @@ def predict_clinical(payload: dict):
 
 @app.post("/predict/image")
 async def predict_image(image: UploadFile = File(...)):
-    lazy_load_image_models()
+    lazy_load_image_model()
     if image_torch_model is None or image_transform is None:
         raise HTTPException(status_code=500, detail="Image model not loaded")
 
@@ -421,7 +434,7 @@ async def predict_combined(
     image: UploadFile = File(...),
     clinical: str = Form(...),
 ):
-    lazy_load_image_models()
+    lazy_load_fusion_model()
     if fusion_model is None or fusion_scaler is None or fusion_transform is None:
         raise HTTPException(status_code=500, detail="Fusion model not loaded")
 
