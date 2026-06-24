@@ -133,9 +133,10 @@ const handleChatSubmit = async (e) => {
       // Gemini history MUST start with a 'user' message, not 'model'.
       // We also verify we aren't sending the message we just typed (it goes in 'message' body)
       const historyForBackend = chatHistory.slice(1); 
+      const backendUrl = import.meta.env.VITE_BACKEND_API_URL || "http://localhost:5000/api";
 
       // 4. Send Request
-      const response = await fetch('http://localhost:5000/api/auth/pcos-chatbot', {
+      const response = await fetch(`${backendUrl}/auth/pcos-chatbot`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ 
