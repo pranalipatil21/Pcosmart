@@ -11,13 +11,17 @@ const app = express();
 const PORT = process.env.PORT || 5000;
 connectDB();
 
-app.use(cors({
-  origin: [
-    "http://localhost:3000",
-    "https://pcosmart.vercel.app",
-    "https://pcosmart-mlservices.onrender.com"
-  ],
+const allowedOrigins = [
+  "http://localhost:3000",
+  "https://pcosmart.vercel.app",
+  "https://pcosmart-mlservices.onrender.com"
+];
+if (process.env.FRONTEND_URL) {
+  allowedOrigins.push(process.env.FRONTEND_URL);
+}
 
+app.use(cors({
+  origin: allowedOrigins,
   credentials: true,
 }));
 

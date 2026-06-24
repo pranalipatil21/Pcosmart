@@ -12,6 +12,7 @@ from dotenv import load_dotenv
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
+# pyrefly: ignore [missing-import]
 from torchvision import models, transforms
 from PIL import Image
 import io
@@ -203,10 +204,20 @@ Write 5-8 lines:
 - Suggest consulting a clinician for confirmation
 - Avoid medicines/prescriptions
 """
-
-    model = genai.GenerativeModel("models/gemini-flash-latest")
-    resp = model.generate_content(prompt)
-    return (resp.text or "").strip()
+    try:
+        model = genai.GenerativeModel("gemini-2.5-flash")
+        resp = model.generate_content(prompt)
+        return (resp.text or "").strip()
+    except Exception as e:
+        print(f"Gemini narration fallback triggered due to: {e}")
+        factors_desc = ", ".join([f"{f['feature']} ({f['direction'].replace('_', ' ')})" for f in top_factors])
+        return (
+            f"This preliminary screening estimate suggests a {lvl} risk of PCOS (probability: {probability:.2f}). "
+            f"The primary contributing factors identified by our analysis include: {factors_desc}. "
+            "Please note that this screening does not constitute a medical diagnosis. "
+            "We highly recommend sharing these results and consulting with a qualified clinician or gynecologist "
+            "for a comprehensive diagnostic evaluation and personalized care plan."
+        )
 
 
 def build_resnet18_2class():
@@ -230,9 +241,18 @@ Write 5-8 lines:
 - Suggest consulting a clinician for confirmation
 - Avoid medicines/prescriptions
 """
-    model = genai.GenerativeModel("models/gemini-flash-latest")
-    resp = model.generate_content(prompt)
-    return (resp.text or "").strip()
+    try:
+        model = genai.GenerativeModel("gemini-2.5-flash")
+        resp = model.generate_content(prompt)
+        return (resp.text or "").strip()
+    except Exception as e:
+        print(f"Gemini image narration fallback triggered due to: {e}")
+        return (
+            f"This screening estimate suggests a {lvl} risk of PCOS (probability: {probability:.2f}) "
+            "based on the provided pelvic/ultrasound image analysis. "
+            "Please keep in mind that image analysis is only one component of a clinical evaluation and does not replace a medical diagnosis. "
+            "We strongly advise consulting a medical professional or fertility specialist for clinical confirmation and guidance."
+        )
 
 # ---- Startup ----
 @app.on_event("startup")
